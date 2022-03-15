@@ -1,0 +1,98 @@
+id: threatModeling
+name: Threat Modeling
+
+# no qualifying questions
+
+level0:
+  short:
+    A project at level 0 on the maturity scale does not undergo threat modeling of features (high risk or otherwise), or
+    threats identified by threat modeling are not addressed.
+  long:
+    Threat modeling of new features (high risk or otherwise) may occur, but the threat modeling does not happen with
+    regularity; and the identified threats may not always be addressed.
+
+taskDefinitions:
+  analyzeHighRiskFeatures:
+    title: Perform threat modeling for new high risk features
+    description: |
+      Perform threat modeling for high risk features being added, and ensure all identified threats are appropriately
+      addressed. <placeholder for a link to your organization's guidance>
+
+      Threat modeling is a structural analysis of the security of a feature, which enables identification, enumeration,
+      prioritization, and mitigation of the potential threats in the feature.
+
+      This process intends to improve the quality of the design of the feature and reduce the number of potential
+      vulnerabilities.
+    questions:
+      - text: Are threat models routinely generated and used for high risk features?
+    level: 1
+
+  generateTestCases:
+    title: Generate test cases
+    description: |
+      Generate test cases based on threat model and incorporate the test cases into testing.
+
+      Generating test cases based on feature threat models ensures that implemented mitigations for identified threats
+      are in place and effective.
+    questions:
+      - text:
+          Are threat models used as an input to the testing process, in order to generate and test threats based on the
+          project's threat model(s)?
+    level: 2
+
+  analyzeNewFeatures:
+    title: Routine threat modelling for all features
+    description: Perform threat modeling for all new features.
+    questions:
+      - text:
+          Are threat models required to be generated for all new features, and updated for features for which threat
+          models already exist when changes are made to those features?
+    level: 3
+
+  toolUsage:
+    title: Use a threat modeling tool
+    description:
+      Perform threat modeling using an appropriate tool (MS Threat Modeling tool, OWASP Threat Dragon, SeaSponge,
+      ThreatModeler, etc.)
+    questions:
+      - text: Is a threat modeling tool used?
+    level: 3
+
+  documentProcess:
+    title: Document threat modeling process
+    description:
+      Capture how threat modeling is applied on the project, for example in the definition of done or in a Confluence
+      page describing a team or product way of working.
+    questions:
+      - text:
+          Have you captured how threat modeling is applied on the project? For example in the definition of done, or in
+          a Confluence page describing a team or product way of working?
+    level: 4
+
+  enableReuse:
+    title: Enable recording and reuse of threats and controls
+    description:
+      Document information about threats and controls so as to make the information available for use by other
+      projects.  Projects should leverage information about existing threats that have been identified and mitigated.
+    questions:
+      - text:
+          Are existing threats and controls being reused from other features; and recorded in a way that encourages
+          reuse for other features?
+    level: 4
+
+  auditProcess:
+    title: Audit application of threat modeling
+    description: Routinely audit the application of the threat modeling practice to verify execution meets expectations.
+    questions:
+      - text:
+          Does the project development team routinely audit its applicaton of threat modeling to ensure it meets
+          expectations of reported maturity level?
+    level: 4
+tasks:
+  - analyzeHighRiskFeatures
+  - generateTestCases
+  - analyzeNewFeatures
+  - toolUsage
+  - documentProcess
+  - enableReuse
+  - auditProcess

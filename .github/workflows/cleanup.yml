@@ -1,0 +1,55 @@
+name: Cleanup
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          token_format: access_token
+          workload_identity_provider: "projects/387575162441/locations/global/workloadIdentityPools/github/providers/github"
+          service_account: "pipeline@besec-project.iam.gserviceaccount.com"
+          access_token_lifetime: "300s"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v0"
+
+      - name: Get old besec images
+        run: |
+          # Get digests and tags of containers that are older than two weeks, ignoring any that have multiple tags (tags are separated by ;)
+          gcloud container images list-tags gcr.io/$GCP_PROJECT/besec \
+            --filter "timestamp.datetime<-P2W" --format="value[no-transforms](digest,tags)" \
+            | grep -v ';' \
+            |  sed -e "s,^,gcr.io/$GCP_PROJECT/besec@," \
+            > old || echo "no old besec images"
+
+      - name: Get old build images
+        run: |
+          # get everything but the latest builder image
+          gcloud container images list-tags gcr.io/$GCP_PROJECT/build \
+            --format="value[no-transforms](digest,tags)" \
+            | grep -v latest \
+            |  sed -e "s,^,gcr.io/$GCP_PROJECT/build@," \
+            >> old || echo "no old builder images"
+
+      - name: Delete images
+        run: |
+          # If there are any, delete them (by digest)
+          if [ -s old ] ; then
+            echo 'deleting old and unreleased images:'
+            echo 'DIGEST              TAGS'
+            cat old
+            cut -f1 old | xargs -- gcloud container images delete --quiet --force-delete-tags
+          fi

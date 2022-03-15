@@ -1,0 +1,66 @@
+id: issueManagement
+name: Issue Management
+
+# no qualifying questions
+
+level0:
+  short: A project at level 0 on the maturity scale inconsistently tracks security-relevant issues
+  long: Some security-relevant bugs, defects, spikes, stories, etc. for this project may be tracked and identified as
+    security relevant, but it is not done consistently; and any means used to identify security issues does not enable
+    them to be easily tracked.  Consistently tracking security-relevant issues in a way that enables tool users
+    (including engineering and security specialists) to be able to quickly and easily find security-relevant issues may
+    be useful (or necessary) for a variety of reasons.
+
+taskDefinitions:
+  bugTracking:
+    title: Use issue management tool for tracking and specifically identifying security issues
+    description: |
+      Use the issue management tool to track issues that are security flaws or would improve security; label those
+      security-relevant issues with the "security" label.
+
+      Having a means to enable easy tracking and searching of security-relevant issues helps security specialists
+      contributing to the project quickly find applicable work items.  This can also be a useful check that there are no
+      known serious security issues prior to a release.
+    questions:
+      - text: Is the issue management tool in use by the team being used to track security-relevant issues?
+        id: bugTracking
+      - text: Is the "security" label being used to identify those issues?
+        id: securityLabel
+    level: 1
+
+  definitionOfDone:
+    title: Integrate security in issue acceptance criteria and the Definition of Done
+    description: |
+      Incorporate security plan components into the definition of done, and regularly capture specific security needs in
+      the acceptance criteria for issue completion, particularly as maturity improves in various practices.
+
+      For stories, this may include activities such as: peer review passed, static and dynamic analysis checks passed,
+      and tests written.
+
+      For features or work items with larger scope, this may include activities such as: threat modeling performed, and
+      secure design principles adhered to.
+
+      This helps teams maintain attained maturity levels in the application of practices, by including them in the team
+      or organization's way of working.
+    questions:
+      - text: Does the definition of done reference or incorporate relevant elements from the project security plan?
+        id: dod
+      - text: Are specific security needs for an issue regularly captured in the issue's acceptance criteria?
+        id: acceptanceCriteria
+    level: 2
+
+  documentedProcess:
+    title: Document use of issue management
+    description:
+      Document how issue management is used for managing security-related issues and flaws on the project, for example
+      in a Confluence page describing a team or product way of working; or in the definition of done.
+    questions:
+      - text:
+          Have you documented how issue management tools are used for managing security-related issues and flaws on the
+          project?
+    level: 4
+
+tasks:
+  - bugTracking
+  - definitionOfDone
+  - documentedProcess

@@ -1,0 +1,144 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://github.com/ThalesGroup/besec/practiceSchema",
+    "title": "BeSec Practice Definition",
+    "description": "The BeSec tool consumes practices, that are specifications of tasks to perform, written in YAML. Note that the API representation of Practices is different.",
+    "type": "object",
+    "x-go-type": {
+        "$comment": "Used by go-swagger to direct code generation to extend the existing type",
+        "import": {
+            "package": "github.com/ThalesGroup/besec/lib"
+        },
+        "type": "Practice"
+    },
+    "additionalProperties": false,
+    "required": ["id", "name", "tasks"],
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-z]+[a-zA-Z0-9]*$",
+            "description": "The internal practice name. Use camelCase."
+        },
+        "name": {
+            "type": "string",
+            "description": "The user-facing name of this practice"
+        },
+        "page": {
+            "description": "A page describing this practice in more detail, or providing additional guidance.",
+            "type": "string",
+            "format": "uri"
+        },
+        "notes": {
+            "type": "string",
+            "description": "Optional user-facing notes about this practice, for example to explain any terminology used in the questions."
+        },
+        "questions": {
+            "description": "A list of qualifying questions, that determine whether this practice applies at all to the project.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "$ref": "#/definitions/question",
+                "description": "A qualifying question. You must specify an id for each question to be able to refer to it in the condition. If N/A is allowed as an answer, any answer of N/A will render a practice as not applicable, as the practice's condition become unevaluable."
+            }
+        },
+        "condition": {
+            "type": "string",
+            "description": "If a practice has qualifying questions, then it will also need a condition explaining how to interpret the answers to those questions.\nIf the practice always applies, then don't specify this.\nThe syntax is a boolean expression, formed of question ids, !, &&, || and (brackets)."
+        },
+        "level0": {
+            "type": "object",
+            "description": "A description of a project that doesn't meet level 1 of the practice",
+            "required": ["short"],
+            "additionalProperties": false,
+            "properties": {
+                "short": {
+                    "description": "short should be written so it can fill in the sentence \"This project <short>.\"",
+                    "type": "string"
+                },
+                "long": {
+                    "description": "An optional fuller explanation",
+                    "type": "string"
+                }
+            }
+        },
+        "taskDefinitions": {
+            "type": "object",
+            "description": "The core of the practice - these are the things the teams need to do.",
+            "additionalProperties": {
+                "$ref": "#/definitions/task"
+            }
+        },
+        "tasks": {
+            "type": "array",
+            "description": "The task definitions to include in the practice.\nThe order matters: what is likely to be a more important task should come before a less important task.",
+            "minItems": 1,
+            "items": {
+                "type": "string",
+                "description": "A reference for the task, unique within the practice, not visible to users. Use camelCase.",
+                "pattern": "^[a-z]+[a-zA-Z0-9]*$"
+            }
+        }
+    },
+    "definitions": {
+        "task": {
+            "description": "A self-contained description of an activity that will improve product security.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["title", "description", "level", "questions"],
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "A short summary of the task. Try and use the imperative tense."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "The full definition of what the task is. Try to include *why* this is a useful thing to do."
+                },
+                "level": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 4,
+                    "description": "If a team is performing all of the tasks of a given level, their maturity rating for this practice is considered to be at that level.\nLevel 5 is reserved for teams going beyond the activities described in the practice.\nIf there are less than four levels, the order they should be introduced is: 4, 1, 2, 3."
+                },
+                "questions": {
+                    "description": "Questions to determine whether or not the team already does this task.\nIf the team answer yes to all of these questions, then we assume this task is being performed.",
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": "#/definitions/question",
+                        "description": "A Yes/No question to determine if the team is already doing this task."
+                    }
+                }
+            }
+        },
+        "question": {
+            "type": "object",
+            "required": ["text"],
+            "additionalProperties": false,
+            "properties": {
+                "text": {
+                    "type": "string",
+                    "description": "The question to ask"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "A reference to be able to refer to the question.\nCan be omitted if there is only one question in a task, in which case the question ID defaults to the task ID.\nMust be unique within a practice.",
+                    "pattern": "^[a-z]+[a-zA-Z0-9]*$"
+                },
+                "answers": {
+                    "type": "array",
+                    "description": "A set of allowed answers.",
+                    "items": {
+                        "$comment": "any primitive"
+                    },
+                    "default": ["Yes", "No"]
+                },
+                "na": {
+                    "type": "boolean",
+                    "description": "Whether to allow N/A as an answer.",
+                    "default": true
+                }
+            }
+        }
+    }
+}

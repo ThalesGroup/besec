@@ -1,0 +1,32 @@
+/* Topaze dark colours
+:root {
+    --primary--dark: hsl(200,100%,55%);
+
+    --background-primary--dark: #131A27;
+    --background-secondary--dark: #233048;
+    --background-tertiary--dark: #34476A;
+    --background-default--dark: #0B0F17;
+
+    --font-color-primary--dark: #f7f9fb;
+    --font-color-secondary--dark: #f7f9fb;
+    --font-color-tertiary--dark: #b2b2b2;
+    --font-color-quaternary--dark: #7f7f7f;
+    --font-color-legend--dark: #F7F9FB;
+    --font-color-link--dark: #ffffff;
+    --font-color-link--hover--dark: #E5E5E5;
+}
+*/
+
+/* This is a popular CSS trick to offset link targets vertically, so the appbar doesn't hide them.
+    We don't use it, because:
+      - the :target selector doesn't seem to be working - it only marks an element as the :target when you hit enter in the scroll bar after the pages has rendered
+      - it breaks linking to elements with borders
+    Instead see AdapterLink in common.ts
+
+:target::before {
+    content: '';
+    display: block;
+    height: 80px;
+    margin: -80px 0 0;
+}
+*/

@@ -1,0 +1,30 @@
+# Example configuration file for the BeSec tool
+
+# practices-dir: /path/to/alternative/practices/directory
+
+# endpoint: https://besec.example.com #
+# Set your bearer token via the BESEC_ACCESS_TOKEN environment variable, rather than here
+
+gcp-project: my-gcp-project-id
+service-account: cli-administrator@<gcp-project>.iam.gserviceaccount.com
+
+trusted-domains: [example.com, example.org]
+alert-access-request: false
+alert-first-login: false
+
+auth:
+  gcpAuthDomain: <project>.firebaseapp.com
+  gcpPublicApiKey: mahqu...GCl-tX4
+  providers:
+    - id: google.com
+    - id: saml.my-provider
+      whitelisted: true
+      samlClaims:
+        email: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+        firstName: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname
+        surname: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname
+        department: Department
+      signInOptions: # see signInOptions described here https://github.com/firebase/firebaseui-web/
+        providerName: My SAML Provider
+        iconUrl: https://c.s-microsoft.com/favicon.ico?v2
+        buttonColor: "#5DBFD4"

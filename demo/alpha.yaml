@@ -1,0 +1,665 @@
+project:
+  name: Alpha
+  description: Our first ever project, **Alpha**.
+plans: # Each plan is an array of plan revisions
+  # The migration to the new task response structure was performed using: yq -Y -w 120 '.plans[][].responses[].tasks[] |= {answers: .}'
+  - - details:
+        projects: ["Alpha"]
+        date: "2019-04-01"
+        notes: A minimal plan
+        committed: true
+      responses:
+        practicesVersion: current
+        practiceResponses: &plan1answers
+          hostedProducts:
+            practice:
+              isHosted:
+                answer: "No"
+            tasks:
+              cloudHosting:
+                answers:
+                  cloudHosting:
+                    answer: "Unanswered"
+                    notes: null
+              limitProdAdmins:
+                answers:
+                  limitProdAdmins:
+                    answer: "Unanswered"
+              admin2FA:
+                answers:
+                  admin2FA:
+                    answer: "Unanswered"
+                    notes: null
+              adminLeastPrivilegeServices:
+                answers:
+                  adminLeastPrivilegeServices:
+                    answer: "Unanswered"
+                    notes: null
+              adminLeastPrivilege:
+                answers:
+                  adminLeastPrivilege:
+                    answer: "Unanswered"
+                    notes: null
+              corpIdentity:
+                answers:
+                  corpIdentity:
+                    answer: "Unanswered"
+                    notes: null
+              adminBastion:
+                answers:
+                  adminBastion:
+                    answer: "Unanswered"
+              adminU2F:
+                answers:
+                  adminU2F:
+                    answer: "Unanswered"
+              secretsManagement:
+                answers:
+                  secretsManagement:
+                    answer: "Unanswered"
+                    notes: null
+              infraAsCode:
+                answers:
+                  infraAsCode:
+                    answer: "Unanswered"
+                    notes: null
+              enforceInfraAsCode:
+                answers:
+                  enforceInfraAsCode:
+                    answer: "Unanswered"
+                    notes: null
+              recycleProd:
+                answers:
+                  recycleProd:
+                    answer: "Unanswered"
+                    notes: null
+              firewall:
+                answers:
+                  firewall:
+                    answer: "Unanswered"
+                    notes: null
+              hostFirewall:
+                answers:
+                  hostFirewall:
+                    answer: "Unanswered"
+                    notes: null
+              patchFrequently:
+                answers:
+                  patchFrequently:
+                    answer: "Unanswered"
+                    notes: null
+              monitorVulns:
+                answers:
+                  monitorVulns:
+                    answer: "Unanswered"
+                    notes: null
+              oneDayPatch:
+                answers:
+                  oneDayPatch:
+                    answer: "Unanswered"
+              auditLogging:
+                answers:
+                  auditLogging:
+                    answer: "Unanswered"
+                    notes: null
+              auditLogAggregation:
+                answers:
+                  auditLogAggregation:
+                    answer: "Unanswered"
+                    notes: null
+              incidentResponsePlan:
+                answers:
+                  incidentResponsePlan:
+                    answer: "Unanswered"
+                    notes: null
+              incidentResponseCo:
+                answers:
+                  incidentResponseCo:
+                    answer: "Unanswered"
+              auditLogProtection:
+                answers:
+                  auditLogProtection:
+                    answer: "Unanswered"
+                    notes: null
+              enumeratePII:
+                answers:
+                  enumeratePII:
+                    answer: "Unanswered"
+                    notes: null
+              intrusionAlerts:
+                answers:
+                  intrusionAlerts:
+                    answer: "Unanswered"
+              backups:
+                answers:
+                  backups:
+                    answer: "Unanswered"
+                    notes: null
+              availabilityAlerts:
+                answers:
+                  availabilityAlerts:
+                    answer: "Unanswered"
+                    notes: null
+              ddosProtection:
+                answers:
+                  ddosProtection:
+                    answer: "Unanswered"
+                    notes: null
+              ddosTests:
+                answers:
+                  ddosTests:
+                    answer: "Unanswered"
+                    notes: null
+          issueManagement:
+            tasks:
+              bugTracking:
+                answers:
+                  bugTracking:
+                    answer: "Yes"
+                  securityLabel:
+                    answer: "No"
+                    notes:
+                      Lots of issues are security issues. TeS JIRA does have a Security attribute (not label). New JIRA
+                      has a security label but it isn't being used.
+              definitionOfDone:
+                priority: true
+                answers:
+                  dod:
+                    answer: "No"
+                    notes:
+                      Some elements are in the DoD - peer review, unit testing. Others are not. Each team owns its own
+                      DoD. Answer here is only for the core team - don't know about other teams.
+                  acceptanceCriteria:
+                    answer: "No"
+                    notes: Acceptance criteria not used for every story. Demo often used instead.
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+          peerReview:
+            tasks:
+              codeReview:
+                answers:
+                  codeReview:
+                    answer: "No"
+                    notes: May vary between teams, but code reviews are voluntary.
+                priority: true
+              doReviews:
+                answers:
+                  doReviews:
+                    answer: "No"
+              performSecurityReview:
+                answers:
+                  performSecurityReview:
+                    answer: "Yes"
+                    notes: Security reviews are performed on security artifacts
+                priority: true
+              toolEnforced:
+                answers:
+                  toolEnforced:
+                    answer: "No"
+                    notes:
+                      Review Board might be useful here - integrates with JIRA. Gitlab protected branches have been used
+                      on some projects too.
+                priority: true
+              audit:
+                answers:
+                  audit:
+                    answer: "No"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+                    notes: May be for some teams, but not all.
+          productSecurityFunctionality:
+            tasks:
+              softwareUpdate:
+                answers:
+                  easyUpdate:
+                    answer: "Yes"
+                  verifyUpdates:
+                    answer: "Yes"
+              auditLogging:
+                answers:
+                  auditLogging:
+                    answer: "Yes"
+              exportAuditLog:
+                answers:
+                  exportAuditLog:
+                    answer: "Yes"
+                    notes: Internal database with an API to export it, also available over syslog + TLS
+              rollbackProtection:
+                answers:
+                  rollbackProtection:
+                    answer: "No"
+          staticAnalysis:
+            tasks:
+              useTools:
+                answers:
+                  useTools:
+                    answer: "No"
+                    notes: golint is used. No static analysis of javascript or python.
+              triageNew:
+                answers:
+                  triageNew:
+                    answer: "Yes"
+                    notes: CICD will fail if there are any issues.
+                  reviewFalsePositives:
+                    answer: "Yes"
+              allDevelopers:
+                answers:
+                  allDevelopers:
+                    answer: "Yes"
+              newIssuesFixed:
+                answers:
+                  newIssuesFixed:
+                    answer: "Yes"
+              useRecommendedConfig:
+                answers:
+                  useRecommendedConfig:
+                    answer: "No"
+              triageLegacy:
+                answers:
+                  triageLegacy:
+                    answer: "Yes"
+              trackMetrics:
+                answers:
+                  trackMetrics:
+                    answer: "No"
+              testingIntegration:
+                answers:
+                  testingIntegration:
+                    answer: "Yes"
+              useUpdatedTool:
+                answers:
+                  useUpdatedTool:
+                    answer: "Yes"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "Yes"
+                    notes:
+                      There is a mix of documentation, but given the hard check in CICD that there can be no issues,
+                      it's kind of moot.
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "No"
+              legacyAddressed:
+                answers:
+                  legacyAddressed:
+                    answer: "Yes"
+          thirdPartyUpdates:
+            practice:
+              usesThirdParty:
+                answer: "Yes"
+            tasks:
+              perReleaseUpdates:
+                answers:
+                  perReleaseUpdates:
+                    answer: "Yes"
+                    notes: Not a formal process, but the culture is to update where possible. Some exceptions.
+              regularUpdates:
+                answers:
+                  regularUpdates:
+                    answer: "Yes"
+              failOnOldLibraries:
+                answers:
+                  failOnOldLibraries:
+                    answer: "No"
+              automatedLibraryUpdates:
+                answers:
+                  automatedLibraryUpdates:
+                    answer: "No"
+                issues: ["https://github.com/facebook/create-react-app/issues/5678"]
+                priority: true
+              failOnOld:
+                answers:
+                  failOnOld:
+                    answer: "No"
+                issues: ["https://github.com/facebook/create-react-app/issues/5680"]
+          threatModeling:
+            tasks:
+              analyzeHighRiskFeatures:
+                answers:
+                  analyzeHighRiskFeatures:
+                    answer: "No"
+                    notes: Training and tooling are barriers here.
+              generateTestCases:
+                answers:
+                  generateTestCases:
+                    answer: "No"
+              analyzeNewFeatures:
+                answers:
+                  analyzeNewFeatures:
+                    answer: "No"
+              toolUsage:
+                answers:
+                  toolUsage:
+                    answer: "No"
+              documentProcess:
+                answers:
+                  documentProcess:
+                    answer: "No"
+                    notes: Although the existing risk analysis for Alpha followed the documented process.
+              enableReuse:
+                answers:
+                  enableReuse:
+                    answer: "No"
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "No"
+          training:
+            tasks:
+              placeholder:
+                answers:
+                  placeholder:
+                    answer: "No"
+          vulnAssessment:
+            practice:
+              assessable:
+                answer: "Yes"
+            tasks:
+              haveAssessment:
+                answers:
+                  haveAssessment:
+                    answer: "Yes"
+                    notes: "Black box assessment of v1. Scale ~$25k."
+              newFindingsAddressed:
+                answers:
+                  findingsTriaged:
+                    answer: "No"
+                    notes: "Not all findings have been fixed"
+                  followVulnMgmt:
+                    answer: "Yes"
+                    notes: "Findings resulted in advisory and classification"
+              assessRiskyChanges:
+                answers:
+                  assessRiskyChanges:
+                    answer: "No"
+              periodicAssessments:
+                answers:
+                  periodicAssessments:
+                    answer: "No"
+              incorporateTests:
+                answers:
+                  incorporateTests:
+                    answer: "Yes"
+                    notes: "Tests from the assessment have been incorporated into automated testing"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "No"
+          webAppScanning:
+            practice:
+              webInterface:
+                answer: "Yes"
+            tasks:
+              useWebScanningTools:
+                answers:
+                  useWebScanningTools:
+                    answer: "No"
+                    notes: Very low security maturity in this practice.
+              newIssuesFixed:
+                answers:
+                  newIssuesFixed:
+                    answer: "No"
+              enableUse:
+                answers:
+                  enableUse:
+                    answer: "No"
+              legacyAddressed:
+                answers:
+                  legacyAddressed:
+                    answer: "No"
+              useConfiguration:
+                answers:
+                  useConfiguration:
+                    answer: "No"
+              automateTesting:
+                answers:
+                  automateTesting:
+                    answer: "No"
+              updateTool:
+                answers:
+                  updateTool:
+                    answer: "No"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "No"
+  - - details: &plan2rev1details
+        projects: ["Alpha"]
+        date: "2019-07-10"
+        committed: false
+      responses:
+        practicesVersion: current
+        practiceResponses: &plan2rev1responses
+          <<: *plan1answers
+          issueManagement:
+            tasks:
+              bugTracking:
+                answers:
+                  bugTracking:
+                    answer: "Yes"
+                  securityLabel:
+                    answer: "Yes"
+              definitionOfDone:
+                answers:
+                  dod:
+                    answer: "Yes"
+                    notes: Answer here is only for the core team - don't know about other teams.
+                  acceptanceCriteria:
+                    answer: "Yes"
+                    notes:
+                      Not all stories have acceptance criteria, but they are reasonable exceptions - tiny bug fixes etc.
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+          peerReview:
+            tasks:
+              codeReview:
+                answers:
+                  codeReview:
+                    answer: "Yes"
+              doReviews:
+                answers:
+                  doReviews:
+                    answer: "Yes"
+              performSecurityReview:
+                answers:
+                  performSecurityReview:
+                    answer: "Yes"
+                    notes: Security reviews are performed on security artifacts
+              toolEnforced:
+                answers:
+                  toolEnforced:
+                    answer: "Yes"
+                    notes: Merge requests with protected branches
+              audit:
+                answers:
+                  audit:
+                    answer: "No"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+                    notes: May be for some teams, but not all.
+          threatModeling:
+            tasks:
+              analyzeHighRiskFeatures:
+                answers:
+                  analyzeHighRiskFeatures:
+                    answer: "No"
+                    notes: Training and tooling are barriers here.
+                issues: ["https://github.com/facebook/create-react-app/issues/1234"]
+                priority: true
+              generateTestCases:
+                answers:
+                  generateTestCases:
+                    answer: "No"
+              analyzeNewFeatures:
+                answers:
+                  analyzeNewFeatures:
+                    answer: "No"
+              toolUsage:
+                answers:
+                  toolUsage:
+                    answer: "No"
+              documentProcess:
+                answers:
+                  documentProcess:
+                    answer: "No"
+                    notes: Although the existing risk analysis for Alpha followed the documented process.
+              enableReuse:
+                answers:
+                  enableReuse:
+                    answer: "No"
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "No"
+          training:
+            tasks:
+              placeholder:
+                answers:
+                  placeholder:
+                    answer: "Yes"
+          vulnAssessment:
+            practice:
+              assessable:
+                answer: "Yes"
+            tasks:
+              haveAssessment:
+                answers:
+                  haveAssessment:
+                    answer: "Yes"
+                    notes: "Black box assessment of v1. Scale ~$25k."
+              newFindingsAddressed:
+                answers:
+                  findingsTriaged:
+                    answer: "No"
+                    notes: "Not all findings have been fixed"
+                  followVulnMgmt:
+                    answer: "Yes"
+                    notes: "Findings resulted in advisory and classification"
+              assessRiskyChanges:
+                answers:
+                  assessRiskyChanges:
+                    answer: "No"
+              periodicAssessments:
+                answers:
+                  periodicAssessments:
+                    answer: "No"
+              incorporateTests:
+                answers:
+                  incorporateTests:
+                    answer: "Yes"
+                    notes: "Tests from the assessment have been incorporated into automated testing"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "No"
+          webAppScanning:
+            practice:
+              webInterface:
+                answer: "Yes"
+            tasks:
+              useWebScanningTools:
+                answers:
+                  useWebScanningTools:
+                    answer: "No"
+                    notes: Very low security maturity in this practice.
+              newIssuesFixed:
+                answers:
+                  newIssuesFixed:
+                    answer: "No"
+              enableUse:
+                answers:
+                  enableUse:
+                    answer: "No"
+              legacyAddressed:
+                answers:
+                  legacyAddressed:
+                    answer: "No"
+              useConfiguration:
+                answers:
+                  useConfiguration:
+                    answer: "No"
+              automateTesting:
+                answers:
+                  automateTesting:
+                    answer: "No"
+              updateTool:
+                answers:
+                  updateTool:
+                    answer: "No"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "No"
+    - details:
+        <<: *plan2rev1details
+        committed: true
+        notes: This plan has some useful changes for testing revision history.
+        date: "2019-07-11"
+      responses:
+        practicesVersion: current
+        practiceResponses:
+          <<: *plan2rev1responses
+          vulnAssessment:
+            practice:
+              assessable:
+                answer: "Yes"
+            tasks:
+              haveAssessment:
+                answers:
+                  haveAssessment:
+                    answer: "Yes"
+                    notes: "Black box assessment of v1. Scale ~$25k."
+              newFindingsAddressed:
+                answers:
+                  findingsTriaged:
+                    answer: "Yes"
+                  followVulnMgmt:
+                    answer: "Yes"
+                    notes: "Findings resulted in advisory and classification"
+              assessRiskyChanges:
+                answers:
+                  assessRiskyChanges:
+                    answer: "Yes"
+              periodicAssessments:
+                answers:
+                  periodicAssessments:
+                    answer: "No"
+              incorporateTests:
+                answers:
+                  incorporateTests:
+                    answer: "Yes"
+                    notes: "Tests from the assessment have been incorporated into automated testing"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "No"

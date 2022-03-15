@@ -1,0 +1,111 @@
+id: peerReview
+name: Peer Review
+
+# no page - this practice is entirely contained within these tasks
+
+notes: |
+  Regular, change-based code review, as well as reviews of test cases, test implementation, test coverage, feature
+  design, etc., improve product quality and security.
+
+  These reviews help improve code quality and maintainability; assist in finding defects; and help find better ideas
+  and solutions.
+
+  Manual code reviews in particular can help focus additional diligence on sensitive or troublesome areas of code.
+
+  Code reviews ensure that newly developed code meets defined coding standards and conventions, and meet security
+  requirements, and reviews can leverage checklists to help improve effectiveness. Performing peer reviews as part of
+  the merge process ensures that code issues are addressed prior to being introduced into a main code branch.
+
+  Reviews of testcases and tests also ensure that test coverage is appropriate and sufficient.
+
+# no qualifying questions - every project needs peer review
+
+level0:
+  short: A project at level 0 on the maturity scale is performing minimal or inconsistent peer review
+  long:
+    Some code changes may be peer reviewed, but not consistently or reliably. Changes probably somewhat regularly make
+    it into the product without being reviewed.
+
+taskDefinitions:
+  codeReview:
+    title: Peer review all code changes
+    description: |
+      All code changes are reviewed by someone else. A reliable process is in place that ensures all code changes get reviewed.
+    questions:
+      - text: Are all changes made to code reviewed, with very few exceptions?
+    level: 1
+
+  doReviews:
+    title: Peer review all changes
+    description: |
+      All changes that the team make are reviewed by someone else.
+
+      This covers everything that could affect the quality of the product: tests, test cases, code, designs, build
+      systems, deployment configuration, etc.
+    questions:
+      - text:
+          Are all changes made to product artifacts (code, tests, designs, configuration, etc) reviewed, with very few
+          exceptions?
+    level: 2
+
+  performSecurityReview:
+    title: Perform Security Reviews for significant security critical components and artifacts
+    description: |
+      A Security Review is an extensive review (for instance, code review or design review) with a security focus,
+      which typically includes one or more security experts from outside of the project team, and potentially multiple
+      members of the project team.
+
+      A feature or other artifact is often selected for Security Review by a team after discussion with a security
+      expert. A Security Review would be identified in a feature or task's acceptance criteria, and would be completed
+      prior to considering the feature or task as done.
+
+      Examples of security critical changes include the addition or modification of crypto; and addition or
+      modification of an authentication mechanism.
+
+    questions:
+      - text: Does the project team routinely perform Security Reviews for security critical artifacts?
+    level: 2
+
+  toolEnforced:
+    title: Support/enforce peer review through tooling
+    description: |
+      Enforce through tooling that all changes require two people to sign off on (at least the author and a peer reviewer).
+
+      This could be through requiring all merges to a production branch to be made through pull requests with at least
+      one approval, for example.
+    questions:
+      - text: Does tooling ensure that all changes are peer reviewed?
+    level: 3
+
+  audit:
+    title: Audit peer reviews
+    description: |
+      Periodically audit the peer review process to validate that it is working correctly.
+
+      Audits validate that at least: all changes made are being reviewed; the reviews are being performed by the right
+      people; they are real reviews not just a rubber stamp exercise; and comments made are resolved.
+    questions:
+      - text: Is the peer review process periodically audited to check it is working well?
+    level: 4
+
+  documentedProcess:
+    title: Capture the process for doing peer reviews
+    description: |
+      Capture how peer reviews are performed, for example in the definition of done or in a Confluence page describing
+      a team or product way of working. This should make it clear what the expectations are for what is in scope of
+      peer review, how to get your changes reviewed, how the tooling is used, expectations for reviews of tests and
+      design artifacts, etc.
+
+    questions:
+      - text:
+          Have you captured how peer review is performed? For example in the definition of done, or in a Confluence page
+          describing a team or product way of working?
+    level: 4
+
+tasks:
+  - codeReview
+  - doReviews
+  - performSecurityReview
+  - toolEnforced
+  - audit
+  - documentedProcess

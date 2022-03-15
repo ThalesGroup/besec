@@ -1,0 +1,46 @@
+id: demoPractice
+name: Demo Static Analysis
+
+notes: |
+  This practice is used to demonstrate multiple practice versions.
+
+level0:
+  short:
+    A project at level 0 on the maturity scale has a minimal or inconsistent amount of static analysis and issue triage
+    performed, or does not analyze all code.
+  long: Some code may undergo static analysis, and some effort may go into triaging and managing output, but these
+    activities are not performed consistently or reliably.
+
+tasks: [useTools, triageNew, removed]
+taskDefinitions:
+  # in priority order, with maturity questions embedded
+  useTools:
+    title: Routinely use static analysis
+    description: |
+      Deploy capability to routinely use applicable static analysis tools.
+
+      Perform static analysis on all of the code that makes up the project, using at least a subset of the recommended
+      configuration.
+    questions:
+      - text:
+          Are one or more static analysis tools routinely used to scan all of the code in the project, using at least a
+          subset of the recommended configuration?
+    level: 1
+
+  triageNew:
+    title: Triage all issues in new code
+    description: |
+      Triage and manage all identified issues in new code.
+
+      This description is a little lacking - the delta enhances it
+    questions:
+      - text: Are all static analysis issues in code (other than legacy code) routinely identified and triaged?
+    level: 4
+
+  removed:
+    title: This isn't going to appear
+    description: |
+      Not included after the delta is applied
+    questions:
+      - text: Why am I here?
+    level: 1

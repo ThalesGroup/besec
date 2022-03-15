@@ -1,0 +1,142 @@
+name: CI
+
+on:
+  push:
+  release:
+    types: [published]
+
+jobs:
+  build_test:
+    runs-on: ubuntu-latest
+    name: Build and Test
+    container: gcr.io/besec-project/build
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: cache go
+        uses: actions/cache@v2
+        env:
+          cache-name: build-go
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+            ~/.cache/golangci-lint
+          key: ${{ env.cache-name }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ env.cache-name }}-
+
+      - name: cache npm
+        uses: actions/cache@v2
+        env:
+          cache-name: build-npm
+        with:
+          path: |
+            ~/.npm
+          key: ${{ env.cache-name }}-npm-${{ hashFiles('ui/package-lock.json') }}
+          restore-keys: |
+            ${{ env.cache-name }}-
+
+      - name: npm install
+        run: cd ui && npm ci --audit=false # no audit as we have dependabot
+
+      - name: build
+        run: |
+          ./set_modification_time.sh
+          SCRATCH=true make release --assume-new=config.yaml # ensure we regenerate any build time config, overriding anything accidentally committed based on local config
+
+      - name: lint
+        run: make golangci-lint lint
+
+      - name: test # ideally this would be a separate job, but then we'd end up building twice
+        run: |
+          # setup services for integration tests
+          gcloud beta emulators firestore start --host-port localhost:8088 > firestore.out &
+          export FIRESTORE_EMULATOR_HOST=localhost:8088
+          ./besec serve --alert-first-login=false --alert-access-request=false --port=8081 --disable-auth > besec.out &
+
+          # run tests, in parallel
+          echo make testgo >> jobs
+          echo make testui >> jobs
+          echo ./besec practices check >> jobs
+          mkdir examplePractice && mv examplePractice.yaml examplePractice/
+          echo './besec practices check --practices-dir=examplePractice --schema-file=practices/schema.json' >> jobs
+          parallel --verbose --keep-order < jobs
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: besec
+          path: ./besec
+
+  publish:
+    needs: [build_test]
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Docker meta
+        id: docker_meta
+        uses: docker/metadata-action@v3
+        with:
+          images: gcr.io/besec-project/besec
+          tags: |
+            type=raw,value=run-${{github.run_id}}-${{github.run_attempt}}
+            type=edge,branch=main
+            type=semver,pattern={{version}}
+
+      - name: Docker meta debug
+        # identical to docker_meta, but with global prefix=debug
+        id: docker_meta_debug
+        uses: docker/metadata-action@v3
+        with:
+          images: gcr.io/besec-project/besec
+          flavor: |
+            latest=auto
+            prefix=debug-
+          tags: |
+            type=raw,value=run-${{github.run_id}}-${{github.run_attempt}}
+            type=edge,branch=main
+            type=semver,pattern={{version}}
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: besec
+
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          token_format: access_token
+          workload_identity_provider: "projects/387575162441/locations/global/workloadIdentityPools/github/providers/github"
+          service_account: "pipeline@besec-project.iam.gserviceaccount.com"
+          access_token_lifetime: "300s"
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: gcr.io
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - id: build_push
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          file: Dockerfile
+          context: . # so we can grab the binary
+          push: true
+          tags: ${{ steps.docker_meta.outputs.tags }}
+
+      - id: build_push_debug
+        name: Build and push debug
+        uses: docker/build-push-action@v2
+        with:
+          file: debug.Dockerfile
+          context: .
+          push: true
+          tags: ${{ steps.docker_meta_debug.outputs.tags }}

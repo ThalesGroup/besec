@@ -1,0 +1,83 @@
+id: productSecurityFunctionality
+name: Baseline Security Functionality
+
+notes: |
+  This practice contains some basic security functionality that all security products should have.
+
+  It is not an exhaustive list of necessary security functions! There are many others, but they are more dependent on
+  the particular product in question.
+
+level0:
+  short: A project at level 0 on the maturity scale is missing basic security functionality that all products should have
+  long:
+    Lack of these fundamental capabilities will present a barrier to adoption for security-minded customers, and will
+    compare poorly against competitors.
+
+taskDefinitions:
+  softwareUpdate:
+    title: Software update mechanism
+    description: |
+      Implement an easy means for users to update all software/firmware components of a product.
+
+      The update mechanism must verify the authenticity of the update before allowing it to be installed.
+
+      Attributes of an ideal update mechanism (desirable but not required to meet this task):
+
+      * Automatic notification of new updates for internet-connected systems
+      * Does not require human interaction after initiation
+      * Supports roll-back to the previous version
+
+      An update mechanism is necessary to allow customers to protect themselves from security vulnerabilities that are
+      discovered in a product. It needs to be user-friendly to minimize the two main barriers to upgrading that users
+      have: risk and effort."
+    questions:
+      - text: Can users easily upgrade the product with new software/firmware?
+        id: easyUpdate
+      - text: Does the product verify that updates are authentic? # this will be N/A for certain distribution mechanisms, e.g. when updates come from an app store / OS package manager
+        na: true
+        id: verifyUpdates
+    level: 1
+
+  auditLogging:
+    title: Audit logging
+    description: |
+      Provide audit logging functionality that records any potentially security relevant activities in a
+      hard-to-tamper with log.
+
+      This helps users detect compromises and assists in forensics after a breach.
+    questions:
+      - text: Does the product log security relevant activities?
+    level: 1
+
+  exportAuditLog:
+    title: Exportable audit log
+    description: |
+      Provide a means of exporting the audit log to customers centralized logging solutions.
+
+      The exported log should be amenable to import by such systems, i.e. the format should be easily machine readable
+      and events should be exported in real time as they are generated.
+
+      For audit logs to be most effective, they need to be integrated into the same system that customers use for all
+      their other logs. This might be Splunk, ELK, or another SIEM system.
+    questions:
+      - text: Is the audit log exportable, and easily integrated with common log aggregation tools?
+    level: 2
+
+  rollbackProtection:
+    title: Rollback protection mechanism
+    description: |
+      Provide a means of preventing unauthorized software downgrade to a version with known vulnerabilities
+
+      This is only applicable for appliance-like products, as opposed to hosted products or software that users install
+      on their own operating system.
+    questions:
+      - text: Is protection provided for unauthorized rollback to old, vulnerable versions? (applies to appliance-style
+          products only)
+        na: true
+    level: 4
+
+tasks:
+  - softwareUpdate
+  - auditLogging
+  - exportAuditLog
+  - rollbackProtection

@@ -1,0 +1,755 @@
+swagger: "2.0"
+info:
+  version: v1alpha1
+  title: BeSec
+basePath: /v1alpha1
+securityDefinitions:
+  key:
+    type: apiKey
+    in: header
+    name: Authorization
+security:
+  - key: []
+consumes:
+  - application/json
+produces:
+  - application/json
+schemes:
+  - http # actually https in prod
+
+paths:
+  /practices:
+    get:
+      operationId: listPracticesVersions
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            description: All of the versions, from oldest to newest
+            items:
+              type: string
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /practices/{version}:
+    parameters:
+      - name: version
+        in: path
+        type: string
+        required: true
+        description: The version, or the special value "latest".
+
+    get:
+      operationId: getPractices
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/gotPractices"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+  /plan:
+    post:
+      operationId: createPlan
+      parameters:
+        - $ref: "#/parameters/createRevision"
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: object
+            required:
+              - planId
+              - revisionId
+            properties:
+              planId:
+                type: string
+                description: The ID of the plan
+              revisionId:
+                type: string
+                description: The revision ID of the initial revision
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /plan/{id}:
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
+    get:
+      operationId: getPlan
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            additionalProperties: false
+            required: ["plan", "latestRevision"]
+            properties:
+              plan:
+                $ref: "#/definitions/plan"
+              latestRevision:
+                type: string
+                description: The ID of the latest revision of this plan
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      operationId: createPlanRevision
+      parameters:
+        - $ref: "#/parameters/createRevision"
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+            description: The ID of the new revision
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    delete:
+      operationId: deletePlan
+      description: Delete this plan and all of the revisions associated with it
+      responses:
+        "204":
+          description: Deleted
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+  /plan/{id}/versions:
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
+    get:
+      operationId: getPlanVersions
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            description: all of the versions for this plan, in order from oldest to latest
+            items:
+              $ref: "#/definitions/revisionVersion"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+  /plan/{id}/revision/{revId}:
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
+      - type: string
+        name: revId
+        in: path
+        required: true
+    get:
+      operationId: getPlanRevision
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/planDetails"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+  # This is split out so clients can get information about a plan without downloading the whole response
+  /plan/{id}/revision/{revId}/responses:
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
+      - type: string
+        name: revId
+        in: path
+        required: true
+    get:
+      operationId: getPlanRevisionPracticeResponses
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/practiceResponses"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+  /project:
+    get:
+      operationId: listProjects
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/project"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      operationId: createProject
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/projectDetails"
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+            description: The ID of the project
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /project/{id}:
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
+    get:
+      operationId: getProject
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/project"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    put:
+      operationId: updateProject
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/projectDetails"
+      responses:
+        "200":
+          description: OK
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    delete:
+      operationId: deleteProject
+      responses:
+        "204":
+          description: Deleted
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+  /auth:
+    get:
+      operationId: getAuthConfig
+      security: [] # anyone can retrieve the auth config
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/authConfig"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    post:
+      operationId: loggedIn
+      description:
+        Used to trigger one-time events like requesting access. Clients should hit this once after obtaining an ID
+        token, and can use or ignore the response.
+      responses:
+        "200":
+          description: OK
+        default:
+          description: No access, access requested, invalid ID token, or internal error
+          schema:
+            $ref: "#/definitions/error"
+
+definitions:
+  practice:
+    description: The API representation of a practice, a specification of tasks to perform.
+      Note this is not identical to the file representation of a practice - see schema.json for that.
+    type: object
+    required:
+      - id
+      - name
+      - tasks
+    properties:
+      condition:
+        description: |-
+          If a practice has qualifying questions, then it will also need a condition explaining how to interpret the answers to those questions.
+          If the practice always applies, then don't specify this.
+          The syntax is a boolean expression, formed of question ids, !, &&, || and (brackets).
+        type: string
+      id:
+        description: The internal practice name. Use camelCase.
+        type: string
+        pattern: ^[a-z]+[a-zA-Z0-9]*$
+      level0:
+        description: A description of a project that doesn't meet level 1 of the practice
+        type: object
+        required:
+          - short
+        properties:
+          long:
+            description: An optional fuller explanation
+            type: string
+          short:
+            description: short should be written so it can fill in the sentence "This project <short>."
+            type: string
+        additionalProperties: false
+      name:
+        description: The user-facing name of this practice
+        type: string
+      notes:
+        description: Optional user-facing notes about this practice, for example to explain any terminology used in the questions.
+        type: string
+      page:
+        description: A page describing this practice in more detail, or providing additional guidance.
+        type: string
+        format: uri
+      questions:
+        description: A list of qualifying questions, that determine whether this practice applies at all to the project.
+        type: array
+        minItems: 1
+        items:
+          description:
+            A qualifying question. You must specify an id for each question to be able to refer to it in the condition.
+            If N/A is allowed as an answer, any answer of N/A will render a practice as not applicable, as the practice's
+            condition become unevaluable.
+          $ref: "#/definitions/question"
+      tasks:
+        description: |-
+          The core of the practice - this is the list of things teams need to do.
+          The order matters - what is likely to be a more important task should come before a less important task.
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/definitions/task"
+    additionalProperties: false
+    x-go-type:
+      $comment: Used by go-swagger to direct code generation to extend the existing type
+      import:
+        package: github.com/ThalesGroup/besec/lib
+      type: Practice
+
+  question:
+    type: object
+    required:
+      - text
+    properties:
+      answers:
+        description: A set of allowed answers.
+        type: array
+        default:
+          - "Yes"
+          - "No"
+        items:
+          description: An allowed answer
+      id:
+        description: |-
+          A reference to be able to refer to the question.
+          Can be omitted if there is only one question in a task, in which case the question ID defaults to the task ID.
+          Must be unique within a practice.
+        type: string
+        pattern: ^[a-z]+[a-zA-Z0-9]*$
+      na:
+        description: Whether to allow N/A as an answer.
+        type: boolean
+        default: true
+      text:
+        description: The question to ask
+        type: string
+    additionalProperties: false
+
+  task:
+    description: A self-contained description of an activity that will improve product security.
+    type: object
+    required:
+      - id
+      - title
+      - description
+      - level
+      - questions
+    properties:
+      description:
+        description: The full definition of what the task is. Try to include *why* this is a useful thing to do.
+        type: string
+      id:
+        description: A reference for the task, unique within the practice, not visible to users. Use camelCase.
+        type: string
+        pattern: ^[a-z]+[a-zA-Z0-9]*$
+      level:
+        description: |-
+          If a team is performing all of the tasks of a given level, their maturity rating for this practice is considered to be at that level.
+          Level 5 is reserved for teams going beyond the activities described in the practice.
+          If there are less than four levels, the order they should be introduced is: 4, 1, 2, 3.
+        type: integer
+        maximum: 4
+        minimum: 1
+      questions:
+        description: |-
+          Questions to determine whether or not the team already does this task.
+          If the team answer yes to all of these questions, then we assume this task is being performed.
+        type: array
+        minItems: 1
+        items:
+          description: A Yes/No question to determine if the team is already doing this task.
+          $ref: "#/definitions/question"
+      title:
+        description: A short summary of the task. Try and use the imperative tense.
+        type: string
+    additionalProperties: false
+
+  gotPractices:
+    type: object
+    required:
+      - version
+      - practices
+    properties:
+      version:
+        type: string
+      practices:
+        type: object
+        description: The practices indexed by their ID
+        additionalProperties:
+          $ref: "#/definitions/practice"
+
+  plan:
+    type: object
+    description: The plan with the details from its latest revision
+    required:
+      - id
+      - attributes
+    properties:
+      id:
+        readOnly: true
+        type: string
+      attributes:
+        $ref: "#/definitions/planDetails"
+
+  planDetails:
+    type: object
+    description: The high level part of a plan, excluding the individual answers
+    required:
+      - date
+      - committed
+      - projects
+      - maturity
+    properties:
+      date:
+        description: The date this plan applies to (ISO short format)
+        pattern: ^[0-9]{4}-[0-9]{2}-[0-9]{2}$
+        type: string
+      committed:
+        default: false
+        description: When a plan is (believed to be) finished it is committed
+        type: boolean
+      projects:
+        description: The IDs of the projects to which this plan applies
+        type: array
+        items:
+          type: string
+          minItems: 1 # note the implication that projects can't be deleted if there are plans associated with them
+      notes:
+        description: Optional notes about this plan, for example further clarification on the project/team context.
+        type: string
+      maturity:
+        type: object
+        description: The calculated maturity level for each of the plan's practices
+        readOnly: true
+        additionalProperties:
+          type: integer
+          description: The calculated maturity for a practice of this plan
+    x-go-type:
+      # Used by go-swagger to direct code generation to extend the existing type
+      import:
+        package: github.com/ThalesGroup/besec/lib
+      type: PlanDetails
+
+  answer:
+    type: object
+    additionalProperties: false
+    required:
+      - answer
+    properties:
+      answer:
+        # Ideally the type would be [string,null], but go-swagger doesn't
+        # support that part of the spec, so we have a special value instead.
+        type: string
+        enum: ["Yes", "No", "N/A", "Unanswered"]
+      notes:
+        type: string
+        description: Caveats; additions; or explanation of why - in particular why the answer is N/A.
+    x-go-type:
+      import:
+        package: github.com/ThalesGroup/besec/lib
+      type: Answer
+
+  taskResponse:
+    type: object
+    description: The answers to a task's questions and additional data related to planning and execution.
+    required:
+      - answers
+    additionalProperties: false
+    properties:
+      answers:
+        type: object
+        description: Responses to the task questions, keyed on task ID
+        additionalProperties:
+          $ref: "#/definitions/answer"
+      priority:
+        type: boolean
+        description: Whether this task has been chosen as a priority to work on
+      issues:
+        type: array
+        items:
+          type: string
+          description: An issue URL that is being used to track and implement (a part of) this task
+      references:
+        type: string
+        description: A description of how/where to find the current implementation of this task
+    x-go-type:
+      import:
+        package: github.com/ThalesGroup/besec/lib
+      type: TaskResponse
+
+  practiceResponse:
+    type: object
+    additionalProperties: false
+    required:
+      - tasks
+    properties:
+      practice:
+        type: object
+        description: Responses to the practice-level questions, keyed on question ID
+        additionalProperties:
+          $ref: "#/definitions/answer"
+      tasks:
+        type: object
+        description: Responses to each task, keyed on task ID
+        additionalProperties:
+          $ref: "#/definitions/taskResponse"
+    x-go-type:
+      import:
+        package: github.com/ThalesGroup/besec/lib
+      type: PracticeResponse
+
+  practiceResponses:
+    type: object
+    required:
+      - practicesVersion
+      - practiceResponses
+    properties:
+      practicesVersion:
+        type: string
+        description: The version of the practices used for this response
+      practiceResponses:
+        type: object
+        description: The responses to each of the practice questions, keyed on practice id
+        additionalProperties:
+          $ref: "#/definitions/practiceResponse"
+          description: A response to a practice's questions
+    x-go-type:
+      import:
+        package: github.com/ThalesGroup/besec/lib
+      type: PlanResponses
+
+  version:
+    type: object
+    additionalProperties: false
+    required:
+      - time
+      - author
+    properties:
+      author:
+        type: object
+        readOnly: true
+        additionalProperties: false
+        required:
+          - name
+          - uid
+        properties:
+          name:
+            type: string
+            description: The user's display name
+          uid:
+            type: string
+            description: A site-wide unique ID
+          pictureUrl:
+            type: string
+            description: A profile image
+      time:
+        description: The time this version was created
+        format: date-time
+        readOnly: true
+        type: string
+
+  revisionVersion:
+    type: object
+    additionalProperties: false
+    required:
+      - revId
+      - version
+    properties:
+      planId:
+        description: Plan this version is associated with
+        type: string
+      revId:
+        description: revision ID of this version
+        type: string
+      version:
+        $ref: "#/definitions/version"
+
+  project:
+    type: object
+    description: Projects are containers for plans
+    required: ["id", "attributes", "plans"]
+    properties:
+      id:
+        type: string
+        readOnly: true
+      attributes:
+        $ref: "#/definitions/projectDetails"
+      plans:
+        type: array
+        description: The plan IDs associated with this project
+        readOnly: true
+        items:
+          type: string
+
+  projectDetails:
+    type: object
+    required: ["name"]
+    properties:
+      name:
+        type: string
+        description: short name
+        minLength: 1
+      description:
+        type: string
+        description: Further information about the project, for example what teams and products are considered in scope
+
+  authConfig:
+    type: object
+    description: Authentication configuration for the deployment
+    required:
+      - providers
+      - gcpPublicApiKey
+      - gcpAuthDomain
+    properties:
+      providers:
+        $ref: "#/definitions/authProviders"
+      gcpPublicApiKey:
+        type: string
+      gcpAuthDomain:
+        type: string
+      emulatorUrl:
+        type: string
+
+  authProviders:
+    type: array
+    description: The authentication provider configuration, in the order they are shown
+    items:
+      $ref: "#/definitions/authProvider"
+
+  authProvider:
+    type: object
+    description: ""
+    required:
+      - id
+    properties:
+      id:
+        type: string
+        description: The Google Identity Platform provider ID
+        example: "google.com"
+      samlClaims:
+        $ref: "#/definitions/samlProviderClaimsMap"
+      signInOptions:
+        $ref: "#/definitions/signInOptions"
+      whitelisted:
+        type: boolean
+        description: True if every user from this provider has access
+
+  samlProviderClaimsMap:
+    type: object
+    description: A mapping from SAML claims to fields used within the app. Presence indicates this provider is a SAML provider.
+    required:
+      - email
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      firstName:
+        type: string
+      surname:
+        type: string
+      department:
+        type: string
+      pictureURL:
+        type: string
+
+  signInOptions:
+    type: object
+    description: Firebase signin options, original type defined at firebaseui.auth.Config['signInOptions']
+    properties:
+      providerName:
+        type: string
+        description: User facing name for this option
+      iconUrl:
+        type: string
+      buttonColor:
+        type: string
+        example: "#5DBFD4"
+
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      code:
+        type: integer
+        format: int64
+      message:
+        type: string
+
+parameters:
+  createRevision:
+    name: body
+    in: body
+    schema:
+      type: object
+      required:
+        - details
+        - responses
+      properties:
+        details:
+          $ref: "#/definitions/planDetails"
+        responses:
+          $ref: "#/definitions/practiceResponses"

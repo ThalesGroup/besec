@@ -1,0 +1,33 @@
+id: training
+name: Training
+
+notes: |
+  "Many aspects of secure product development are not obvious. Training significantly increases the probability of
+  delivering a secure product or feature.
+
+  The security of our products is the responsibility of everyone who works on them, including (but not limited to)
+  developers, testers, architects, and product owners. Regular general training helps improve the level of security
+  maturity across the organization, and a higher level of awareness and training equates to a higher level of maturity.
+
+  Project teams or organizations with a higher level of maturity tend to operate with a higher level of autonomy, with
+  less reliance on security experts outside of the project team.
+
+level0:
+  short: A project at level 0 on the maturity scale lacks training in security topics for team members.
+  long: |
+    Some security knowledge or expertise may exist in the project team, but a lack of consistent training for all team
+    members increases the likelihood of: insecure implementations; lack of security consideration being given to new
+    features; limited security testing; uninformed prioritization of security-relevant tasks; and a higher reliance on
+    security experts, with limited bandwidth and from outside the team, on the project's critical path.
+
+taskDefinitions:
+  placeholder:
+    title: Placeholder
+    description: |
+      The tasks for this practice need to be tailored for your organization.
+    questions:
+      - text: Has everyone done all the training?
+    level: 4
+
+tasks:
+  - placeholder

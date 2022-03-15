@@ -1,0 +1,14 @@
+id: local
+name: Local Practice
+
+notes: This practice doesn't appear in the base set.
+
+tasks: [task]
+taskDefinitions:
+  # in priority order, with maturity questions embedded
+  task:
+    title: A task
+    description: Tasky task
+    questions:
+      - text: question
+    level: 4

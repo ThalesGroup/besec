@@ -1,0 +1,132 @@
+id: vulnAssessment
+name: Vulnerability Assessment
+
+notes: |
+  Vulnerability assessment is the practice of reviewing and testing a product to discover security flaws. Penetration
+  testing (aka pentesting) attempts to actively exploit weaknesses identified in a system or environment. While the two
+  terms are often used interchangeably, they mean different things.
+
+  A vulnerability assesment is typically carried out by an independent party to the team that created the product.
+
+  Performing vulnerability assessments of our products uses expertise in attacking systems that may not be available
+  within the company (or may not have been available internally in the timescales required) to identify security flaws
+  in our products prior to release.
+
+  The level and complexity of assessment - primarily scope and budget - are important variables to be decided for each
+  assessment. Usually assessors should have full access to the target's source code, as this provides the most value
+  from an assessment.
+
+questions:
+  - id: assessable
+    text: Are the project deliverables reasonably able to undergo vulnerability assessment?
+    na: false
+
+condition: assessable
+
+level0:
+  short: A project at level 0 on the maturity scale hasn't considered performing a vulnerability assessment.
+  long: The project may benefit from a vulnerability assessment given the scope of un-assessed changes in the product.
+
+taskDefinitions:
+  haveAssessment:
+    title: Perform a vulnerability assessment
+    description: |
+      If a vulnerability assessment has never been performed, an assessment should be arranged.
+
+      Review which areas of the product are worth performing a third party vulnerability assessment on. The review
+      should involve a security expert and a technical lead in the product.
+
+      <placeholder for details on how to arrange this in your organization - budgets, test houses, RFPs, etc>
+    questions:
+      - text: Has the product ever had a vulnerability assessment?
+    level: 1
+
+  newFindingsAddressed:
+    title: Evaluate and address all findings
+    description: Findings from a vulnerability assessment should be triaged, captured in the issue tracking system, and
+      prioritised and fixed appropriately.
+
+      Valid findings from a vulnerability assessment will typically be high priority issues, as they represent either
+      exploitable vulnerabilities or other security risks. For issues that apply to released products, the usual
+      vulnerability management process should be used to determine if a customer security advisory is required.
+    questions:
+      - text:
+          Are findings from vulnerability assessments promptly triaged, and fixed in a timely manner given their
+          priority as security issues?
+        id: findingsTriaged
+      - text:
+          Are findings that represent vulnerabilities in released products being handled according to the vulnerability
+          management process?
+        id: followVulnMgmt
+    level: 1
+
+  assessRiskyChanges:
+    title: Perform vulnerability assessments after risky changes
+    description: |
+      Risky, security-relevant changes increase the possibility that vulnerabilities could be introduced in a project.
+      Project teams should adopt the practice of having vulnerability assessments performed after potentially high risk
+      changes or additions.
+
+      The scheduling of vulnerability assessments should still be done pragmatically. If a number of high risk changes
+      or additions are being made prior to a product release, for instance, then it doesn't necessarily make sense to
+      have a vulnerability assessment performed after each change is complete. Having the vulnerability assessment done
+      after the changes and/or additions are all completed (but before a product release, if possible) makes more sense
+      from a business and efficiency standpoint.
+    questions:
+      - text:
+          Does the project team routinely have third party vulnerability assessments done on the project when high risk
+          changes have been made?
+    level: 2
+
+  periodicAssessments:
+    title: Arrange periodic assessments (at least annually)
+    description: |
+      Having regular assessments helps to limit the amount of time that passes between releases and
+      assessments, and increases the likelihood that issues with new or updated features undergo testing.
+
+      For projects that release updates frequently, it is likely that a shorter time frame than annually would be
+      beneficial. However, if additions of or changes to high-risk features happens infrequently, then annually may be
+      sufficient. These factors should be taken into consideration as part of the assessment planning process.
+
+      Similarly, favor assessment quality over frequency if budget constraints limit what is possible. frequently
+      checking for the same basic issues will deliver less value than occasionally doing a thorough assessment.
+    questions:
+      - text: Does the project team organize regular, periodic vulnerability assessments (performed at least annually)?
+    level: 3
+
+  incorporateTests:
+    title: Incorporate tests from vulnerability assessments into testing
+    description: |
+      When a vulnerability assessment is performed, the assessers may use testing tools or tests that would be useful
+      to incorporate into the project's test suite. When possible and useful, those tests should be regularly used to
+      test the project.
+    questions:
+      - text: Are tests from vulnerability assessments routinely incorporated into automated testing?
+    level: 4
+
+  documentedProcess:
+    title: Document process
+    description:
+      Capture how vulnerability assessments are done on the project, including frequency and cadence; the test houses
+      that have been used or that can be used; the features tested; the results collected; etc.
+    questions:
+      - text: Have you captured how vulnerability assessments are done on the project?
+    level: 4
+
+  auditProcess:
+    title: Audit use of vulnerability assessments
+    description: Routinely audit the use of vulnerability assessments to verify execution and value meet expectations.
+    questions:
+      - text:
+          Does the project team routinely audit its use of vulnerability asessments meet expectations, both of reported
+          maturity level, as well as expected value?
+    level: 4
+
+tasks:
+  - haveAssessment
+  - newFindingsAddressed
+  - assessRiskyChanges
+  - periodicAssessments
+  - incorporateTests
+  - documentedProcess
+  - auditProcess

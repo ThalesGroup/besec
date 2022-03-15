@@ -1,0 +1,146 @@
+id: thirdPartyUpdates
+name: Updating Third-Party Components
+
+notes: |
+  **Rationale**
+
+  It may not be apparent why it is so important from a security perspective to update our third-party dependencies,
+  instead of just focusing on vulnerabilities. This section explains why.
+
+  Systematically updating third-party components allows projects to benefit from security improvements that are
+  incrementally made in many software projects, preempting later discoveries of security vulnerabilities in older
+  versions without the improvements. This also helps catch cases where a previously fixed functional bug is later
+  identified to also be a security bug, or a security fix has been released but not disclosed yet. All of these
+  scenarios are commonplace occurrences.
+
+  Updating components to their latest version rather than trying to just patch a known vulnerability reduces the effort
+  involved in patching and maintaining patch-sets, and reduces the risk of incorrectly applying a patch.
+
+  Where our software runs on a system our customers control (as opposed to a closed hardware platform or a web service for
+  example), customers will run vulnerability scanning tools that will identify vulnerabilities in our third-party
+  components. It is better for us to minimize the number of times this occurs, even if a given vulnerability doesn't
+  impact the security of our product - it looks bad to customers and it wastes our time reasoning with them why a
+  particular vulnerability isn't exploitable.
+
+  **Terminology and Exclusions**
+
+  For the purposes of this practice, third-party components are any bit of software used in a product but not developed as
+  part of that product. This includes libraries, applications, runtimes, packages, operating systems, kernels,
+  programming frameworks, firmware, etc. It only includes software that forms part of the final product, so
+  development-only components such as build systems, testing frameworks, etc are not in scope here. Software that is
+  developed in-house but not specifically as part of this product is also considered third-party, for example a common
+  company library used in multiple products.
+
+  Indirect dependencies are components that are depended upon by another third-party component. For example, a product
+  uses library A, and library A in turn uses library B - an indirect dependency. Consumers of library A have very
+  limited ability to control the version of library B used, so indirect dependencies are out of the scope of this
+  practice.
+
+questions:
+  - text: Does this project use third-party components?
+    id: usesThirdParty
+    na: false
+condition: usesThirdParty
+
+level0:
+  short:
+    A project at level 0 on the maturity scale is likely to be released with out of date third-party dependencies, so is
+    at higher risk of exposure to vulnerabilities.
+  long:
+    This project likely has out-of-date dependencies and does not have a timely means of updating them. The effort
+    required to update its dependencies is likely to increase over time. Vulnerabilities in these dependencies will
+    probably only be addressed if we notice them via a separate mechanism.
+
+taskDefinitions:
+  perReleaseUpdates:
+    title: Update dependencies prior to release
+    description: |
+      Update all dependencies to their latest stable version within the three months prior to a release.
+
+      Projects that aren't doing this already are recommended to adopt the higher maturity tasks that achieve this
+      through automation, rather than creating a manual process for doing it tied to a release event.
+
+      By updating third-party dependencies prior to a release, the risk of exposure to known and unknown vulnerabilities
+      is reduced, and the project limits the build-up of technical debt in the form of very old and disruptive to update
+      components. See the rationale section of the notes for this practice for a fuller explanation.
+    questions:
+      - text: Are all dependencies updated in the three months prior to a product release?
+    level: 1
+
+  regularUpdates:
+    title: Update dependencies at least every three months
+    description: |
+      Update all dependencies to their latest stable version at least every three months.
+
+      Projects that aren't doing this already are recommended to adopt the higher maturity tasks that automate both
+      performing updates and alerting on too-old components.
+
+      Regularly updating third-party components during development rather than at release time completely avoids the
+      build up of technical debt from old dependencies. Following this approach reduces risk to the project release
+      timescales, by avoiding potentially big impacts hitting just before product release.
+
+      Note that if a product releases at least every three months, then this task is met for free with the
+      update-per-release task.
+    questions:
+      - text: Are all dependencies updated at least every three months?
+    level: 2
+
+  failOnOldLibraries:
+    title: Fail builds when libraries are not updated in time
+    description: |
+      Integrate a detection element into the continuous integration environment that will lead to builds
+      failing if a third-party library exceeds an age policy.
+
+      The default age policy should be set to 3 months after a new stable version has been released - if after this time
+      the old dependency is still in use, the build should fail.
+
+      The system will need an exclusion mechanism and potentially a policy override on a per-dependency basis.
+
+      This task only covers libraries, as the best tooling support exists for these, making this task easier to
+      implement than checking all types of third-party components.
+
+      This ensures that out of date libraries are not forgotten or ignored.
+    questions:
+      - text: Do builds fail if they contain an out-of-policy un-updated library?
+    level: 3
+
+  automatedLibraryUpdates:
+    title: Automate updates to libraries
+    description: |
+      Use a continuous integration environment that automatically updates dependencies to their latest stable
+      version. For example, use [Renovate](https://renovatebot.com/) to generate merge/pull requests with test results
+      for each new version as it is released.
+
+      Some dependencies are not as amenable to this style of automation as others. This task is limited to programming
+      libraries, for which the best tooling support exists. Automation of updates for other types of dependencies such
+      as OS packages may be desirable and possible through extending existing tooling or creating custom tooling.
+
+      This dramatically reduces the effort required to keep dependencies up to date.
+    questions:
+      - text: Are dependency updates for libraries automated?
+    level: 4
+
+  failOnOld:
+    title: Fail builds when any component is not updated in time
+    description: |
+      Integrate a detection element into the continuous integration environment that will lead to builds
+      failing if any of the project's third-party components exceed an age policy.
+
+      The default age policy should be set to 3 months after a new stable version has been released - if after this time
+      the old dependency is still in use, the build should fail.
+
+      The system will need an exclusion mechanism and potentially a policy override on a per-dependency basis.
+
+      This task includes all types of third party dependencies, not just libraries: OS packages, binaries, docker containers,
+      etc are all in scope.
+
+      This ensures that out of date components are not forgotten or ignored.
+    questions:
+      - text: Do builds fail if they contain any out-of-policy un-updated third-party component?
+    level: 4
+tasks:
+  - perReleaseUpdates
+  - regularUpdates
+  - failOnOldLibraries
+  - automatedLibraryUpdates
+  - failOnOld

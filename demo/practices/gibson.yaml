@@ -1,0 +1,12 @@
+id: gibson
+name: Hack the Gibson
+notes: This practice isn't applicable to many organizations. You can remove it using the local-practices feature.
+
+tasks: [gibson]
+taskDefinitions:
+  gibson:
+    title: Hack-proof your Gibson
+    description: Deploy best-practice mainframe security.
+    questions:
+      - text: Has your Gibson been hacked?
+    level: 4

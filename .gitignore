@@ -1,0 +1,15 @@
+besec
+*_vfsdata.go
+terraform.tfstate
+.terraform
+config.local.yaml
+node_modules
+
+# firebase
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Ignore generated credentials from google-github-actions/auth
+gha-creds-*.json

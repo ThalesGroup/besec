@@ -1,0 +1,482 @@
+project:
+  name: Beta
+  description: The Beta project
+plans:
+  - - details:
+        projects: ["Beta"]
+        date: "2019-07-15"
+        notes: |
+          This revision is against the minimal demo practices version.
+        committed: false
+      responses:
+        practicesVersion: 0-demo
+        practiceResponses:
+          demoPractice:
+            tasks:
+              useTools:
+                answers:
+                  useTools:
+                    answer: "Yes"
+              demo:
+                answers:
+                  demo:
+                    answer: "Yes"
+                priority: true
+              triageNew:
+                answers:
+                  triageNew:
+                    answer: "No"
+          local:
+            tasks:
+              task:
+                answers:
+                  task:
+                    answer: "No"
+    - details: &rev1details
+        projects: ["Alpha", "Beta"]
+        date: "2019-07-16"
+        notes: |
+          For the hosted products practice, scope includes the operations side. For all of the other practices, the scope
+          is limited to the development of the core Beta app, excluding the client.
+
+          This revision accidentally references the Alpha project too.
+        committed: false
+      responses: &rev1responses
+        practicesVersion: current
+        practiceResponses:
+          hostedProducts:
+            practice:
+              isHosted:
+                answer: "Yes"
+            tasks:
+              cloudHosting:
+                answers:
+                  cloudHosting:
+                    answer: "No"
+                    notes: Mostly. Split between AWS & our (colo) datacenters. The supporting infra are in the datacenters.
+              limitProdAdmins:
+                answers:
+                  limitProdAdmins:
+                    answer: "Unanswered"
+              admin2FA:
+                answers:
+                  admin2FA:
+                    answer: "Yes"
+                    notes:
+                      Covering HSMs, AWS, Datacenter servers, Beta admin interface supports it. Everything supports it,
+                      TBC if everything requires it
+              adminLeastPrivilegeServices:
+                answers:
+                  adminLeastPrivilegeServices:
+                    answer: "Unanswered"
+                    notes: Details TBC for infra but yes.
+              adminLeastPrivilege:
+                answers:
+                  adminLeastPrivilege:
+                    answer: "Unanswered"
+                    notes:
+                      Details TBC for infra but expected yes. For Beta admins there is no further breakdown but admins
+                      only have permisisons to perform what they need to do.
+              corpIdentity:
+                answers:
+                  corpIdentity:
+                    answer: "No"
+                    notes: Separate AD, and separate Beta admin.
+              adminBastion:
+                answers:
+                  adminBastion:
+                    answer: "Yes"
+              adminU2F:
+                answers:
+                  adminU2F:
+                    answer: "No"
+              secretsManagement:
+                answers:
+                  secretsManagement:
+                    answer: "No"
+                    notes: Work in progress to use Vault.
+              infraAsCode:
+                answers:
+                  infraAsCode:
+                    answer: "No"
+                    notes: Most of the AWS-hosted (CloudFormation) infra is. Not the datacenters - moving to Rancher.
+              enforceInfraAsCode:
+                answers:
+                  enforceInfraAsCode:
+                    answer: "No"
+                    notes: TBC on the AWS side.
+              recycleProd:
+                answers:
+                  recycleProd:
+                    answer: "No"
+                    notes: AWS - partially, work ongoing. Datacenter - no.
+              firewall:
+                answers:
+                  firewall:
+                    answer: "Unanswered"
+                    notes: null
+              hostFirewall:
+                answers:
+                  hostFirewall:
+                    answer: "Unanswered"
+                    notes: TBC on all fronts.
+              patchFrequently:
+                answers:
+                  patchFrequently:
+                    answer: "No"
+                    notes: Probably not met on both datacenter hosts & Beta application. TBC on AWS hosts.
+              monitorVulns:
+                answers:
+                  monitorVulns:
+                    answer: "Unanswered"
+                    notes:
+                      Blackduck is used. Work ongoing for container scanning (AWS & Datacenter) - probably TwistLock.
+                      Also Lambdas.
+              oneDayPatch:
+                answers:
+                  oneDayPatch:
+                    answer: "No"
+              auditLogging:
+                answers:
+                  auditLogging:
+                    answer: "Yes"
+                    notes: Datadog is the store.
+              auditLogAggregation:
+                answers:
+                  auditLogAggregation:
+                    answer: "Yes"
+                    notes: Everything goes to Datadog
+              incidentResponsePlan:
+                answers:
+                  incidentResponsePlan:
+                    answer: "Unanswered"
+                    notes: TBC but think so.
+              incidentResponseCo:
+                answers:
+                  incidentResponseCo:
+                    answer: "No"
+              auditLogProtection:
+                answers:
+                  auditLogProtection:
+                    answer: "Yes"
+                    notes:
+                      By virtue of having a dedicated external SaaS log store. But not certain on the level of control
+                      over Datadog access.
+              enumeratePII:
+                answers:
+                  enumeratePII:
+                    answer: "Yes"
+                    notes: PII is isolated to the Beta service. Work is ongoing specifically related to PII concerns.
+              intrusionAlerts:
+                answers:
+                  intrusionAlerts:
+                    answer: "Yes"
+              backups:
+                answers:
+                  backups:
+                    answer: "Unanswered"
+                    notes: TBC. Backups are done.
+              availabilityAlerts:
+                answers:
+                  availabilityAlerts:
+                    answer: "Yes"
+                    notes: CloudWatch Alarms -> PagerDuty & Slack
+              ddosProtection:
+                answers:
+                  ddosProtection:
+                    answer: "Unanswered"
+                    notes: TBC. Think yes on AWS, no on Datacenter.
+              ddosTests:
+                answers:
+                  ddosTests:
+                    answer: "Unanswered"
+                    notes: TBC
+          issueManagement:
+            tasks:
+              bugTracking:
+                answers:
+                  bugTracking:
+                    answer: "Yes"
+                  securityLabel:
+                    answer: "No"
+              definitionOfDone:
+                answers:
+                  dod:
+                    answer: "No"
+                    notes: There is a single DoD across all the app teams.
+                  acceptanceCriteria:
+                    answer: "No"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "Yes"
+          peerReview:
+            tasks:
+              codeReview:
+                answers:
+                  codeReview:
+                    answer: "Yes"
+              doReviews:
+                answers:
+                  doReviews:
+                    answer: "Yes"
+              performSecurityReview:
+                answers:
+                  performSecurityReview:
+                    answer: "Yes"
+                    notes: Security reviews are performed on security artifacts
+              toolEnforced:
+                answers:
+                  toolEnforced:
+                    answer: "No"
+              audit:
+                answers:
+                  audit:
+                    answer: "No"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+          productSecurityFunctionality:
+            tasks:
+              softwareUpdate:
+                answers:
+                  verifyUpdates:
+                    answer: "Yes"
+                  easyUpdate:
+                    answer: "No"
+                    notes:
+                      N/A for the hosted product. For the client, user downloads an archive of tools. Authenticode for
+                      Windows drivers - enforced by Windows; Java signing for JARs. Other components not signed - N/A
+                      for Linux as there isn't a standard, but does apply to the other Windows executables.
+              auditLogging:
+                answers:
+                  auditLogging:
+                    answer: "No"
+                    notes: The data is there for the service component (e.g. in datadog), but not exposed to customers.
+              exportAuditLog:
+                answers:
+                  exportAuditLog:
+                    answer: "No"
+              rollbackProtection:
+                answers:
+                  rollbackProtection:
+                    answer: "N/A"
+          staticAnalysis:
+            tasks:
+              useTools:
+                answers:
+                  useTools:
+                    answer: "No"
+                    notes: Sonarqube used for Java & probably Javacsript? Go vet for Go (these components are common to
+                      Alpha).
+              triageNew:
+                answers:
+                  triageNew:
+                    answer: "Yes"
+                  reviewFalsePositives:
+                    answer: "No"
+              allDevelopers:
+                answers:
+                  allDevelopers:
+                    answer: "Yes"
+              newIssuesFixed:
+                answers:
+                  newIssuesFixed:
+                    answer: "No"
+              useRecommendedConfig:
+                answers:
+                  useRecommendedConfig:
+                    answer: "Yes"
+                    notes: Using the SSG's recommended configurations for Java & Javascript
+              triageLegacy:
+                answers:
+                  triageLegacy:
+                    answer: "Yes"
+                    notes: Excluding client, as per global scoping notes.
+              trackMetrics:
+                answers:
+                  trackMetrics:
+                    answer: "No"
+              testingIntegration:
+                answers:
+                  testingIntegration:
+                    answer: "Yes"
+              useUpdatedTool:
+                answers:
+                  useUpdatedTool:
+                    answer: "Unanswered"
+                    notes: TBC
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "N/A"
+                    notes: Enforced in CI.
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "Yes"
+                    notes: Security Architect reviews correct operation.
+              legacyAddressed:
+                answers:
+                  legacyAddressed:
+                    answer: "No"
+                    notes: Not everything is fixed.
+          thirdPartyUpdates:
+            practice:
+              usesThirdParty:
+                answer: "Yes"
+            tasks:
+              perReleaseUpdates:
+                answers:
+                  perReleaseUpdates:
+                    answer: "Unanswered"
+                    notes: TBC. Releases are ~ per-PI. (excl. Luna)
+              regularUpdates:
+                answers:
+                  regularUpdates:
+                    answer: "Unanswered"
+                    notes: TBC. Given release timings, this is the same as the previous activity.
+              failOnOldLibraries:
+                answers:
+                  failOnOldLibraries:
+                    answer: "No"
+              automatedLibraryUpdates:
+                answers:
+                  automatedLibraryUpdates:
+                    answer: "No"
+              failOnOld:
+                answers:
+                  failOnOld:
+                    answer: "No"
+          threatModeling:
+            tasks:
+              analyzeHighRiskFeatures:
+                answers:
+                  analyzeHighRiskFeatures:
+                    answer: "Yes"
+                    notes: A risk analysis exists for Beta. Aimed to be updated every PI.
+              generateTestCases:
+                answers:
+                  generateTestCases:
+                    answer: "No"
+                    notes: Sort of - mostly used when scoping penetration tests.
+              analyzeNewFeatures:
+                answers:
+                  analyzeNewFeatures:
+                    answer: "Yes"
+              toolUsage:
+                answers:
+                  toolUsage:
+                    answer: "Yes"
+                    notes: MS Threat Modeller
+              documentProcess:
+                answers:
+                  documentProcess:
+                    answer: "Yes"
+                    notes: Security referential
+              enableReuse:
+                answers:
+                  enableReuse:
+                    answer: "No"
+                    notes: Moving to re-use more across different projects.
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "Yes"
+                    notes: SSA will audit occasionally.
+          training:
+            tasks:
+              placeholder:
+                answers:
+                  placeholder:
+                    answer: "Yes"
+          vulnAssessment:
+            practice:
+              assessable:
+                answer: "Yes"
+            tasks:
+              haveAssessment:
+                answers:
+                  haveAssessment:
+                    answer: "No"
+              newFindingsAddressed:
+                answers:
+                  findingsTriaged:
+                    answer: "No"
+                  followVulnMgmt:
+                    answer: "No"
+              assessRiskyChanges:
+                answers:
+                  assessRiskyChanges:
+                    answer: "No"
+              periodicAssessments:
+                answers:
+                  periodicAssessments:
+                    answer: "No"
+              incorporateTests:
+                answers:
+                  incorporateTests:
+                    answer: "No"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "No"
+          webAppScanning:
+            practice:
+              webInterface:
+                answer: "Yes"
+            tasks:
+              useWebScanningTools:
+                answers:
+                  useWebScanningTools:
+                    answer: "Yes"
+              newIssuesFixed:
+                answers:
+                  newIssuesFixed:
+                    answer: "Yes"
+              enableUse:
+                answers:
+                  enableUse:
+                    answer: "No"
+                    notes: Only certain team members are able to use the tool.
+              legacyAddressed:
+                answers:
+                  legacyAddressed:
+                    answer: "Yes"
+              useConfiguration:
+                answers:
+                  useConfiguration:
+                    answer: "No"
+              automateTesting:
+                answers:
+                  automateTesting:
+                    answer: "No"
+              updateTool:
+                answers:
+                  updateTool:
+                    answer: "No"
+              documentedProcess:
+                answers:
+                  documentedProcess:
+                    answer: "No"
+              auditProcess:
+                answers:
+                  auditProcess:
+                    answer: "No"
+    - details:
+        <<: *rev1details
+        projects: ["Beta"]
+        notes: For the hosted products practice, scope includes the operations side. For all of the other practices, the
+          scope is limited to the development of the core Beta app, excluding the client.
+
+
+          Check the revision history of this project to see how changes are recorded and what happens when the practices
+          version changes.
+        date: "2019-07-17"
+      responses:
+        <<: *rev1responses

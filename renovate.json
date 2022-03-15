@@ -1,0 +1,29 @@
+{
+    "extends": ["config:base"],
+    "prCreation": "not-pending",
+    "prConcurrentLimit": 4,
+    "branchPrefix": "renovate-",
+    "packageRules": [
+        {
+            "packagePatterns": ["^@types"],
+            "groupName": "@types packages",
+            "schedule": "before 3am on Wednesday",
+            "automerge": true
+        },
+        {
+            "packageNames": [
+                "google.golang.org/grpc",
+                "golang.org/x/oauth2 ",
+                "golang.org/x/net",
+                "golang.org/x/crypto",
+                "google.golang.org/api "
+            ],
+            "groupName": "low impact go packages",
+            "schedule": "before 3am on Thursday",
+            "automerge": true
+        }
+    ],
+    "dockerfile": {
+        "fileMatch": ["(^|/)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$", ".*\\.Dockerfile$"]
+    }
+}

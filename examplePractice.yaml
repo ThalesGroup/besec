@@ -1,0 +1,79 @@
+# A practice is specified in YAML, see https://www.tutorialspoint.com/ansible/ansible_yaml_basics.htm for an introduction covering the syntax we use
+# Use two spaces for indentation (note: tabs won't work)
+
+# The authoritative definition of the practice file format is in the practices/schema.json file.
+# You can configure many text editors to provide as-you-type linting and tooltips by pointing it at the schema.
+
+id: examplePractice
+name: A template / example practice
+page: https://confluence.example.com/display/SEC/Example # Optional URL to a page with extra information
+
+# text in the notes field can include markdown
+# multi paragraph content should be formatted as "notes: |", with the content beginning on the line after notes, indented
+# including the "|" after "notes:" and starting the text indented after the next line is acceptable formatting even for single paragraph content.
+# see the "description:" field below for an example formatting
+notes: Optional notes about this practice, for example to explain any terminology used in the questions.
+
+# optional - a list of qualifying questions, that determine whether this practice applies at all to the project
+# do not include markdown in questions
+questions:
+  - text: How much do you care about security?
+    # put an ID an all questions in this section, so that we can reference them later
+    # references are scoped by the practice name, so don't worry about global uniqueness
+    id: care
+    # can't answer with N/A. If this isn't specified, then users can always answer N/A
+    na: false
+  - text: Is this a make it day project?
+    id: makeItDay
+    na: false
+    # if you don't specify a list of answers to a question, then it is Yes/No by default
+
+# If your practice has qualifying questions, then it will also need a condition explaining how to interpret the answers to those questions.
+# If the practice always applies, then don't specify this
+# The condition is an expression written in the language defined here: https://github.com/Knetic/govaluate
+condition: (care == 'a little' || care == 'a lot') && !makeitday
+
+level0: # optional, a description of a project that doesn't meet level 1 of the practice
+  # short is a brief explanation of the characteristics of a project that doesn't meet Level 1
+  # this text can include markdown
+  short: This project is not very secure
+  # long is an optional fuller explanation
+  # this text can include markdown
+  # a multi-paragraph "long:" should follow the formatting indicated above for the "notes:" field
+  long: This project should be purged from our repositories post-haste.
+
+# The tasks, defined below, that make up the practice
+# The order matters - what is likely to be a more important task should come before a less important task
+tasks: [beSecure, anotherTask]
+
+# The core of the practice - the things teams need to do
+taskDefinitions:
+  beSecure:
+    title: Be secure!
+    # Text in the description field can include markdown
+    # If you have a long bit of text, or need to embed newlines in an entry, you can use this "|" syntax.
+    description: |
+      You should be as secure as you can whilst working on this project.
+
+      Refer to the [security section in the practice](page) for guidance on how to be *reasonably* **secure**.
+
+      Also, for example:
+
+      * Do this to be secure
+      * Or try doing this
+    # These questions should be yes/no to determine whether or not the team already does this task, and so it wouldn't be a change for them to do it.
+    # In other words, if the team answer yes to all of these questions, we can reasonably expect them to do this task without much effort.
+    # do not include markdown in questions
+    questions:
+      - text: Are you normally quite secure?
+      # Even though there's only one question in this example, the format is still a list of questions
+      # If you don't specify an ID for a question, it implicitly has the same ID as the task
+      # If a task has multiple questions, they must each have explicit IDs
+    level: 1
+
+  anotherTask:
+    title: Be super secure!
+    description: You know the drill. Secure all the things.
+    questions:
+      - text: Have you secured everything?
+    level: 4

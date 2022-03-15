@@ -1,0 +1,19 @@
+notes: |
+  This practice is used to demonstrate multiple practice versions.
+  It also has local modifications made to it, using the delta practice functionality.
+
+tasks: [useTools, demo, triageNew] # excluding "removed" from the base set, and adding "demo" from here
+taskDefinitions:
+  demo:
+    title: A task that doesn't appear in subsequent versions
+    description: A task that will disappear.
+    questions:
+      - text: Dummy
+    level: 2
+
+  triageNew: # redefining the base version
+    title: Triage all issues in new code
+    description: |
+      Triage and manage all identified issues in new code.
+
+      New code is any code that has been created or included since the use of static analysis began.

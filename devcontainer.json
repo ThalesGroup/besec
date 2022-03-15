@@ -1,0 +1,4 @@
+{
+    "dockerFile": "build.Dockerfile",
+    "forwardPorts": [8080, 8081, 8088]
+}

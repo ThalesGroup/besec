@@ -1,0 +1,146 @@
+id: webAppScanning
+name: Web Application Scanning
+
+notes:
+  Web application scanning is a type of dynamic analysis, where a tool is used to perform black box testing of a web
+  application through the web front end, in order to find potential security vulnerabilities in the application. This
+  process is sometimes called Dynamic Analysis Security Testing (DAST).
+
+questions:
+  - text: Does this project contain a web interface?
+    id: webInterface
+    na: false
+condition: webInterface
+
+level0:
+  short:
+    A project at level 0 on the maturity scale performs web application scanning minimally or inconsistently (if at
+    all), and even if so only limited triage and correction of issues is performed.
+  long:
+    The project or feature may undergo web application scanning, and some effort may go into triaging and managing
+    output, but these activities are not performed consistently or reliably; and findings are not routinely resolved.
+
+taskDefinitions:
+  useWebScanningTools:
+    title: Routinely perform web application scanning.
+    description: |
+      Deploy capability to routinely perform web application scanning with an appropriate tool (e.g. ZAP or Nessus).
+    questions:
+      - text: Are one or more web application scanning tools routinely used?
+    level: 1
+
+  newIssuesFixed:
+    title: Fix all issues newly identified by web application scanning
+    description: |
+      All new issues raised by the tool are fixed prior to release.
+
+      This approach requires developers to address quality and security issues that they've introduced with their code
+      changes immediately upon discovery.
+
+      Fixing issues immediately improves the overall effectiveness of web application scanning, in that the developer
+      responsible for introducing issues is also responsible for fixing them. This also prevents a backlog of security
+      issues or security debt from being generated.
+    questions:
+      - text:
+          Is there a process in place that leads to all new issues raised by the web application scanning to be fixed
+          prior to release?
+    level: 1
+
+  enableUse:
+    title: Enable use by all developers
+    description: |
+      Enable the use of web application scanning tools by all developers, and developers regularly use the tool to
+      perform analysis prior to checkin/merge of changes.
+
+      Enabling use by all developers results in developers receiving fast feedback on any issues they may have
+      introduced in a web application. They can then fix the issues that they introduced before merging their changes.
+
+      Having developers fix issues that they've introduced is better for learning, and is more effective and efficient
+      than having separate individuals or groups working to fix identified issues later.
+    questions:
+      - text:
+          Is the use of of web application scanning tools (and their results) available for all developers, rather than
+          only to a particular individual or group who run the web application scanning tools?
+    level: 2
+
+  legacyAddressed:
+    title: All issues identified have been addressed
+    description: |
+      There is no backlog of web application scanning findings for the project, and tools and policy ensure that new
+      issues are not added to the backlog.
+    questions:
+      - text:
+          Have all issues identified by web application scanning been addressed, and issues are fixed before changes are
+          merged/committed?
+    level: 2
+
+  useConfiguration:
+    title: Use recommended web application scanning tool configuration
+    description: |
+      Use of web application scanning includes full use of the appropriate tool configuration.
+
+      <placeholder for link to your organization's guidance>
+    questions:
+      - text: Is the recommended configuration used for applicable tools?
+    level: 3
+
+  automateTesting:
+    title: Integrate web application scanning with automated testing
+    description: |
+      Fully integrate web application scanning with continuous integration and build, and associated reporting mechanisms.
+
+      Integration of web application scanning with continuous integration and build process would result in builds
+      failing if there are any new issues identified. Integration with automated testing results in regular scanning,
+      and can provide immediate feedback if issues are identified.
+
+      Preventing changes that would result in security issues from being integrated into the main codeline has a number
+      of benefits. It promotes developers taking responsibility for their own code, and helps ensure that quality and
+      security standards are being met for all changes being made. It also prevents build up of additional security and
+      technical debt, and the introduction of vulnerabilities into finished code.
+    questions:
+      - text:
+          Have web application scanning tools been integrated with automated testing/continuous integration and
+          reporting?
+    level: 3
+
+  updateTool:
+    title: Use updated web application scanning tool versions
+    description: |
+      Use the most recent versions of the applicable tool(s).
+
+      This helps ensure the best possible coverage and results.
+    questions:
+      - text: Are the most recent version(s) of the applicable tool(s) being used?
+    level: 4
+
+  documentedProcess:
+    title: Document web application scanning process
+    description:
+      Capture how web application scanning is applied on the project, for example in the definition of done or in a
+      Confluence page describing a team or product way of working.
+    questions:
+      - text:
+          Have you captured how web application scanning is applied on the project? For example in the definition of
+          done, or in a Confluence page describing a team or product way of working?
+    level: 4
+
+  auditProcess:
+    title: Audit application of web application scanning process
+    description:
+      Routinely audit the application of the web application scanning process to verify execution meets expectations.
+    questions:
+      - text:
+          Does the project development team routinely audit its application of web application scanning to ensure it
+          meets expectations of reported maturity level?
+    level: 4
+
+tasks:
+  - useWebScanningTools
+  - newIssuesFixed
+  - enableUse
+  - legacyAddressed
+  - useConfiguration
+  - automateTesting
+  - updateTool
+  - documentedProcess
+  - auditProcess

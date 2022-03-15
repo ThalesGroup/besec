@@ -1,0 +1,9 @@
+# ignore everything except the besec binary and config files, to make building the deployment image faster
+*
+!besec
+!config.yaml
+!config.local.yaml
+
+# For the builder image, we also need these:
+!go.mod
+!go.sum

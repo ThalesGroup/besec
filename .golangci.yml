@@ -1,0 +1,35 @@
+run:
+    build-tags:
+        - assets
+    skip-dirs:
+        - ui/
+
+linters:
+    enable: # in addition to the default set
+        - dupl
+        - gosec
+        - bodyclose
+        - unconvert
+        - gocognit
+        - goconst
+        - gocyclo
+        # - gocritic - # some useful rules, but too many unhelpful ones
+        # - gofmt isn't needed - goimports replaces it
+        - goimports # gofmt + unused imports + import clustering
+        - misspell
+        - unparam
+        - dogsled
+        - nakedret
+        - exportloopref
+        - gochecknoglobals
+        - whitespace
+
+linters-settings:
+    govet:
+        check-shadowing: true
+    goimports:
+        local-prefixes: github.com/ThalesGroup/besec
+
+issues:
+    exclude:
+        - 'declaration of "err" shadows declaration at' # a shadowed err is unlikely to be a bug

@@ -1,0 +1,561 @@
+id: hostedProducts
+name: Hosted Products
+
+notes: |
+  Securing the applications that we host and make available on the internet has many similarities to ensuring our more
+  traditional packaged products are secure. The foundations of application security captured in the other practices are
+  necessary but not sufficient: here we capture the extra bits needed for our online applications.
+
+  This practice doesn't cover general web security (XSS, CSRF, password brute forcing, etc), but focuses specifically on
+  the implications of hosting an application.
+
+  This is a larger collection of tasks than in other practices - over time we expect to split this practice out into a
+  number of separate practices.
+
+  The term 'administrative access' in this practice refers to any kind of access to any part of the system by someone with
+  privileges to perform actions that a normal customer can not perform. (It is not limited in scope to people with root
+  credentials on a server.)
+
+# This practice is naturally split into sections, but we don't support that.
+# For now using the title format "topic: action" to capture it.
+# In future this should probably either be split into multiple practices, or
+# we should work out what "section" support would mean within a practice.
+
+questions:
+  - text:
+      Is this project working on a hosted product? That is, a service run by us and made available over the internet?
+    id: isHosted
+    na: false
+
+condition: isHosted
+
+level0:
+  short:
+    A project at level 0 on the maturity scale is missing some foundational quality or security practices from the
+    hosting of this product.
+  long:
+    As there are a lot of activities in this practice, being at maturity level 0 does not necessarily mean this product
+    is not doing anything to be secure. However, there are important tasks that should be carried out to reach a basic
+    level of confidence in the hosting of the product.
+
+taskDefinitions:
+  ##
+  ## Cloud hosting
+  ##
+
+  cloudHosting:
+    title: "Cloud Hosting"
+    description: |
+      Host the service in one of the major public clouds: AWS; Azure; or Google Cloud Platform.
+
+      These services offer greater control, visibility, and foundational infrastructure security versus hosting on our
+      own infrastructure. By using a cloud provider's infrastructure, we can start from a clean slate for each product.
+      The major provider's offerings are more secure and have better tooling support than their smaller competitors.
+    questions:
+      - text: Is the service hosted in AWS, Azure, or GCP?
+    level: 1
+
+  ##
+  ## Administrative access
+  ##
+
+  limitProdAdmins:
+    title: "Administrative Access: limit who has it"
+    description: |
+      Limit administrative access to the production instance to only those individuals that require it. This
+      is not everyone working on the product!
+
+      This reduces the chance of compromise of an administrative account, which can be challenging to recover from.
+    questions:
+      - text: Is administrative access to the production instance limited to only those individuals that require it?
+    level: 1
+
+  admin2FA:
+    title: "Administrative Access: require two factor authentication"
+    description: |
+      Require two factor authentication for all administrative access by a human. This applies to SSH, web
+      control panels, APIs, cloud service provider access to production infrastructure, CICD infrastructure, and
+      third-party services.
+
+      Password reuse and theft is one of the most common and successful ways to compromise a hosted product. Use of a
+      second factor dramatically reduces the risk of password theft or re-use, and makes phishing harder to carry out
+      (or impossible, if a U2F token is used).
+    questions:
+      - text: Does all administrative access by a human require two factor authentication?
+    level: 1
+
+  adminLeastPrivilegeServices:
+    title: "Administrative Access: only to necessary services"
+    description: |
+      Staff need access to different elements of the product for different purposes. Ensure that access
+      rights are aligned with operational need at least to the level of granting administrative access to each
+      individual service only to those who need it.
+
+      For example, support engineers may need to be able to log in to an administrative interface to manage customer
+      details, and perhaps they need to be able to review certain application logs, but they should not have access to
+      the hosting infrastructure. The converse applies -- developers should not have unfettered access to customer data.
+    questions:
+      - text: Are access rights to each service only granted to those people that need it?
+    level: 1
+
+  adminLeastPrivilege:
+    title: "Administrative Access: least privilege"
+    description: |
+      Staff need access to different elements of the product for different purposes. Ensure that access
+      rights _within each service_ are aligned with operational need.
+
+      For this to be effectively implemented, there must be a mechanism by which staff can request and be granted
+      changes in permissions. There should ideally be a review mechanism to ensure privileges don't simply accrue, but
+      remain appropriate over time. [Repokid] (https://github.com/Netflix/repokid) is a potentially useful tool for AWS.
+
+      For example:
+
+      - DBAs may have (exclusive) admin rights over the whole database, whereas operations staff only have read access
+      to the logging/audit tables.
+
+      - Security staff may have audit access to customer activities in an application, whereas support staff can read
+      and potentially even modify customer data that they need access to.
+    questions:
+      - text:
+          Do staff have the least privilege access that they need across the product and its supporting infrastructure?
+    level: 2
+
+  corpIdentity:
+    title: "Administrative Access: integration with corporate account"
+    description: |
+      Delegate authentication of admins to the corporate directory, so that development teams do not have to
+      recall all of the places to make updates when staff leave. This can equivalently be implemented with separate user
+      accounts and automation that uses the corporate directory to sync/remove old accounts.
+
+      This reduces the risk of credential sharing and of ex-employees misusing access to systems.
+    questions:
+      - text: Are admin users tied to the corporate directory?
+    level: 2
+
+  adminBastion:
+    title: "Administrative Access: bastion host for production access"
+    description: |
+      Limit administrative access to production infrastructure to be via a bastion host. This applies to SSH
+      access to servers and API access to infrastructure components. Require strong authentication and auditing on the
+      bastion host.
+
+      Bastion host access could be via a VPN, or require a U2F key for SSH access, for example.
+
+      This provides a level of defense in depth against vulnerabilities in the authentication and authorization for
+      administrative functionality. An attacker must first be able to gain access to the bastion host. It also
+      simplifies auditing of administrative access by concentrating access through a single point.
+
+      An alternative to using bastion hosts for some tasks is to use cloud provider management tools such as AWS Systems
+      Manager Session Manager. These offer strong authentication, authorization, and auditing, without having to expose
+      additional internet-facing attack surface.
+    questions:
+      - text:
+          Is administrative access to production infrastructure only possible via a bastion host or cloud provider
+          management tools?
+    level: 3
+
+  adminU2F:
+    title: "Administrative Access: require U2F second factor"
+    description: |
+      Require authentication using a U2F / Webauthn device for administrative access to any part of the
+      product or its production infrastructure. This is an extension of the earlier task requiring two factors. Note
+      that other types of hardware tokens like RSA tokens which implement the time-based one time password (TOTP) scheme
+      are _not sufficient_.
+
+      Use of a U2F (or equivalent) hardware token eliminates phishing attacks, the most common and reliable targeted
+      attack used today. Any scheme that involves users manually entering codes can be phished.
+    questions:
+      - text: Does administrative access to the product or its infrastructure require use of a U2F/Webauthn device?
+    level: 3
+
+  ##
+  ## Asset Management
+  ##
+
+  secretsManagement:
+    title: "Asset Management: manage secrets"
+    description: |
+      Manage production secrets using a dedicate service, not source control.
+
+      Examples of production secrets include database credentals, TLS certificates, and third-party API credentials.
+      Secrets management services include AWS' [SSM Parameter
+      Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-paramstore.html) and
+      [Hashicorp's Vault](https://www.vaultproject.io/).
+
+      Leaking secrets is a common cause of compromise of hosted products, and can be an easy way to escalate privileges
+      after an initial breach. Centralizing management within a secrets management service removes the burden of making
+      secure decisions from each developer, and enables consistent access control mechanisms to be used.
+    questions:
+      - text: Are production secrets secured in a dedicated service - not source control?
+    level: 1
+
+  # the AWS specific bit in this task should live in the Cloud practice when it is created
+  infraAsCode:
+    title: "Asset Management: define infrastructure as code"
+    description: |
+      Define all infrastructure in text files stored in source control repositories, or explicitly in code
+      where that isn't practical.
+
+      This implies using the cloud provider's tooling (AWS have
+      [CloudFormation](https://aws.amazon.com/cloudformation)), another tool like
+      [Terraform](https://www.terraform.io/), and/or our own custom tooling. Regardless of the infrastructure provider,
+      it implies _not_ making production infrastructure changes using the point-and-click web UI or through human use of
+      command line tooling.
+
+      This brings many benefits, but on the security side it allows the infrastructure to be controlled, reviewable, and
+      testable. This dramatically reduces the risk of insecure infrastructure components undermining the security of the
+      system.
+    questions:
+      - text: Is all infrastructure defined as code stored in source control repositories?
+    level: 2
+
+  enforceInfraAsCode:
+    title: "Asset Management: prevent manual changes"
+    description: |
+      To prevent drift from the infrastructure-as-code definitions, prevent manual access to the production
+      environment except in emergencies.
+
+      For example:
+
+      * SSH to build machines and production machines is not possible without explicit authorization
+      ([`BLESS`](https://github.com/Netflix/bless) could be used to enforce this on AWS).
+      * Write access to the management consoles used to maintain infrastructure similarly requires assuming a specific
+      role, which triggers an alert (or perhaps requires dual authorization)."
+    questions:
+      - text: Are manual changes to the production environment prevented?
+    level: 4
+
+  recycleProd:
+    title: "Asset Management: regularly rebuild environments"
+    description: |
+      Automatically rebuild as much of the production environment as possible on a regular basis, and
+      replace the components of the old environment with the rebuilt one.
+
+      This has different meanings for different components, but for example:
+
+      * Containers and virtual machines can often be straight-forwardly killed, and the orchestration component will
+      respawn them.
+      * Cloud services can have fresh copies configured, and then load balancers used to switch production over to the
+      new services.
+
+      This prevents any long term drift of the environment from the configuration captured in source control, for
+      example from an accumulation of small on-the-spot manual fixes applied to production. It can also disrupt
+      attackers that have managed to obtain persistent access to an environment.
+    questions:
+      - text: Is the production environment automatically rebuilt on a regular basis?
+    level: 4
+
+  ##
+  ## Networking
+  ##
+
+  firewall:
+    title: "Networking: whitelist traffic"
+    description: |
+      Configure networks/firewalls to only allow the broad classes of traffic that are expected. For
+      example: inbound HTTP(S) traffic from the internet to a subnet - or specific virtual machines - containing web
+      servers; no outbound internet access from subnets where that is not expected; etc. Use a whitelist and deny all
+      traffic that isn't explicitly allowed.
+
+      Note this applies whether we are explicitly managing a firewall, or if it is a configuration property of a cloud
+      provider's network.
+
+      This reduces risk in a number of ways. Internal services may be misconfigured and allow unauthorized users to use
+      them directly, or a debug service may have been left running on a port. By preventing access from the internet,
+      this vulnerability may not be exploitable. If a service is compromised, an attacker will usually want to
+      exfiltrate data of some sort - by preventing direct internet access from network segments that don't need this,
+      the attacker's job becomes more difficult.
+
+      Use of a whitelist approach rather than a blacklist is safer - functional failures are easy to diagnose, but it is
+      hard to verify that a blacklist prevents all unnecessary classes of traffic.
+    questions:
+      - text: Are networks configured to only allow expected traffic using a whitelist approach?
+    level: 2
+
+  hostFirewall:
+    title: "Networking: host based firewall"
+    description: |
+      Configure host-based firewalls on all hosts to reflect the design of the service and only allow those
+      communications that are expected.
+
+      In a micro-services architecture, the equivalent mechanism is to limit inter-service communication to only those
+      services that are expected to need to communicate.
+
+      This is a natural complement to a network firewall, which helps defend against attacks from other parts of the
+      system rather than from outside the system.
+    questions:
+      - text:
+          Are hosts / services prevented from communicating with other hosts / services that they don't need to
+          communicate with?
+    level: 3
+
+  ##
+  ## Patching
+  ##
+
+  patchFrequently:
+    title: "Patching: frequently"
+    description: |
+      Keep up to date all third-party dependencies, including infrastructure software (e.g. Linux, Docker,
+      Kubernetes, sshd, ...), with updates occurring at least every two weeks.
+
+      Attackers routinely scan the internet for vulnerable services. In many cases, discovery and exploitation is
+      entirely automated. Reducing the exposure time of known vulnerabilities in our hosted products is probably the
+      single most impactful security measure we can take.
+
+      Note that the Third-Party Component Update practice is targeted to packaged products sold to customers. For hosted
+      products, we need both a faster response but we also do not need to put much focus on triage. It doesn't matter as
+      much if we were exposed and it's now fixed, compared to a packaged product where it's of critical importance that
+      we tell customers about their exposure.
+    questions:
+      - text: Are all third-party dependencies, including infrastructure software, updated at least every two weeks?
+    level: 1
+
+  monitorVulns:
+    title: "Patching: vulnerability monitoring"
+    description: |
+      Monitor all third-party dependencies (including infrastructure software) for publicly disclosed
+      vulnerabilities. On detection of a vulnerability, review its severity within 3 days of disclosure, and apply
+      patches for potentially exploitable vulnerabilities within one week of disclosure.
+
+      This might seem unnecessary given the earlier task to update all dependencies every couple of weeks. This task
+      exists for two reasons. First, it's likely that not *all* dependencies will be updated as quickly as we might
+      like. Maybe there are backwards incompatibilities that require significant rework, for example, and a decision was
+      made to defer the regular updates. By monitoring for vulnerabilities, we can hopefully catch those cases where an
+      update becomes more urgent. Secondly, in a mature environment this allows for faster updates than the regular
+      cadence -- if there are known vulnerabilities that could compromise the product, we want to update *now*, not just
+      when we do our next standard dependency-update.
+    questions:
+      - text:
+          Are all third-party dependencies, including infrastructure software, monitored for publicly disclosed
+          vulnerabilities?
+    level: 3
+
+  oneDayPatch:
+    title: "Patching: 24 hour exposure"
+    description: |
+      As per the previous vulnerability monitoring task, but the SLA for patching exploitable vulnerabilities
+      in the third-party components is 24 hours from public disclosure. This entails both daily monitoring and triage,
+      and an out-of-hours update capability for when a vulnerability drops at the weekend.
+
+      A team operating at this level should more precisely define the criteria for severity of vulnerability that falls
+      into this category.
+    questions:
+      - text:
+          Are all exploitable vulnerabilities in third-party components patched within 24 hours of public disclosure?
+    level: 4
+
+  ##
+  ## Detection and Incident Response
+  ##
+
+  auditLogging:
+    title: "Detection and Incident Response: central logging"
+    description: |
+      Ensure all applications, systems (e.g. compute nodes), and cloud infrastructure are logging audit
+      events to a dedicated audit log.
+
+      Logging guidance:
+
+      * For applications, ensure that sensitive information isn't included in logs (PII, access tokens, etc).
+      * For Linux systems consider what information in /var/logs should be exported.
+      * For AWS configure CloudTrail for account events, VPC flow logs for VPCs, and configure logging for other
+      individual services that support it.
+
+      Logging is a foundational requirement to be able to detect compromise or perform forensics after the event. By
+      storing such events in a separate log, we enable longer retention periods, simpler audit log aggregation, and
+      greater protection of the logs than if audit events are only available in-line in a general-purpose debug log.
+    questions:
+      - text: Do all applications, systems, and cloud infrastructure log to a dedicated location?
+    level: 1
+
+  auditLogAggregation:
+    title: "Detection and Incident Response: aggregate audit logs"
+    description: |
+      Configure a single service to offer operators a centralised view into all the audit logs.
+
+      For example this could be through an ELK stack, or a dedicated cloud service like Loggly, Elastic Cloud, or
+      Splunk.
+
+      Whilst having an audit record is valuable in the event of a breach, it is also necessary to be able to inspect and
+      query the audit logs from a single point. This opens up the possibility of using audit logs to _detect_ breaches,
+      and also greatly simplifies correlating and cross-referencing events.
+    questions:
+      - text: Is there a single service that allows operators to inspect all audit logs?
+    level: 1
+
+  ## TODO: one for the Cloud/AWS practice:
+  # Prevent attackers from disabling logs. Carefully set AWS IAM permissions to ensure CloudTrail can't be reconfigured.
+
+  incidentResponsePlan:
+    title: "Detection and Incident Response: establish a plan"
+    description: |
+      Establish a high level response plan, with executive visibility and support, for the actions that will
+      be taken and by whom in the event of a breach.
+
+      As an example starting point, see this
+      [article](https://medium.com/starting-up-security/an-incident-response-plan-for-startups-26549596b914) and
+      [template](https://github.com/magoo/Incident-Response-Plan/blob/master/EXAMPLE.md).
+
+      Having a high level plan in place enables the company to respond much more quickly and effectively after detecting
+      a breach. It is a naturally chaotic environment, so having some structure to guide people will lead to a quicker
+      and more effective response.
+
+      Note that whilst the Vulnerability Management process applies to vulnerabilities in the application, it does not
+      cover breaches that potentially impact customer data.
+    questions:
+      - text: Is a high level incident response plan in place with executive approval?
+    level: 1
+
+  incidentResponseCo:
+    title: "Detection and Incident Response: contract a company"
+    description: |
+      Establish a contractual relationship with an incident response company. Contact the Security team to
+      arrange this.
+
+      In the event of an incident, this enables us to quickly bring in specialists to assist. Speed is very important
+      when dealing with a breach, so the relatively slow work of picking a company and sorting out the legal and
+      financial aspects should be done beforehand.
+    questions:
+      - text: Has an external company been contracted to support incident response efforts?
+    level: 3
+
+  auditLogProtection:
+    title: "Detection and Incident Response: protect audit logs"
+    description: |
+      Store audit logs in a separate protected environment.
+
+      For example in AWS, a separate logging account could be used, with locked- down S3 buckets and/or CloudWatch Logs
+      resources.
+
+      It is critical to be able to trust logs in the event of a compromise.  By storing audit logs in a secure store
+      that is isolated from the rest of the production environment, even attackers who have compromised a highly
+      privileged part of the production environment should not be able to tamper with the logs capturing how they did
+      this.
+    questions:
+      - text: Are audit logs captured in a secure store, isolated from the rest of the production environment?
+    level: 3
+
+  enumeratePII:
+    title: "Detection and Incident Response: enumerate PII"
+    description: |
+      Enumerate all types of personally identifiable information (PII) and their handling in a single place
+      in the design.
+
+      In the event of a breach, we have a legal responsibility to identify what PII may have been compromised. Knowing
+      what PII is collected and where it is exposed is an important first step. Having to establish that during an
+      incident is painful and avoidable by doing the work up-front.
+    questions:
+      - text: Is all personally identifiable information handled by the product documented in one place?
+    level: 3
+
+  intrusionAlerts:
+    title: "Detection and Incident Response: alerts"
+    description: |
+      Begin to create alerts (email and/or chat) for unusual events that will have a very low false positive
+      rate, e.g.:
+
+      * SSH login to a prod server
+      * Infrastructure changes in the product's AWS account that aren't via CloudFormation
+      * Application-specific anomalies such as: inter-service authentication failures; firewall blocks for unexpected
+      inter-service communication attempts; or SELinux denies.
+      * Logging failures (e.g. via checks for an absence of logs from a source in a particular time period)
+    questions:
+      - text: Do unusual events that might signify a security issue trigger operator alerts?
+    level: 2
+  ## Level 3: there's lots more to add here, we'll get to it once a product reaches level 2!
+  # Use canary tokens.
+  # Incident response professionals (in-house or external)
+  # Threat hunting
+  # Red teams
+  # IDS / IPS solutions
+  # ...
+
+  ##
+  ## Availability
+  ##
+
+  backups:
+    title: "Availability: backups"
+    description: |
+      Backup all user data. Regularly exercise the backups in restore operations to validate that they work.
+
+      This task includes regular verification that we can successfully restore all of the backed up data. This task is
+      not complete if that is not being done, as we do not know if the backups are working and sufficient.
+
+      If a compromise, disaster, or operator error leads to loss of data, copies of that data must be available to
+      restore operation. Permanent loss of customer data is likely to be fatal to an individual product or service's
+      success and is harmful to the company's brand.
+    questions:
+      - text: Are regular tests of backups of all user data carried out?
+    level: 1
+
+  availabilityAlerts:
+    title: "Availability: alerts"
+    description: |
+      Use an application monitoring and alerting service that triggers an alert if the application becomes
+      unusable for clients.
+
+      This could be implemented for example using AWS CloudWatch alarms or a hosted offering like PagerDuty.
+
+      Knowing the system is down is a necessary first step in fixing it!
+    questions:
+      - text: Are operators alerted if the application goes down?
+    level: 2
+
+  ddosProtection:
+    title: "Availability: third-party DDoS protection"
+    description: |
+      Use a third-party DDoS mitigation service such as AWS Shield Pro, Akamai, or CloudFlare.
+
+      DDoS protection is a specialized skill, but carrying out a DDoS attack is a relatively easy task for an attacker.
+      This asymmetry means that (a) DDoS ransom attacks are quite likely and (b) we should contract out the protection
+      to a specialist.
+    questions:
+      - text: Is a DDoS protection service used?
+    level: 3
+
+  ddosTests:
+    title: "Availability: regular DDoS testing"
+    description: |
+      Establish a regular scheduled DDoS testing regime.
+
+      Capacity testing tools are available at many levels of the stack, and third-party black-box DDoS testing services
+      exist. Try to quantify the parameters of what we are susceptible to. What is the order of magnitude cost to an
+      attacker to take an aspect of the service down for 5 minutes? An hour? A day?
+
+      By determining what is capable of taking the service offline, we can calibrate our DDoS protection measures to
+      match our risk appetite.
+    questions:
+      - text: Are regular DDoS tests carried out?
+    level: 4
+
+tasks:
+  - cloudHosting
+  - limitProdAdmins
+  - admin2FA
+  - adminLeastPrivilegeServices
+  - adminLeastPrivilege
+  - corpIdentity
+  - adminBastion
+  - adminU2F
+  - secretsManagement
+  - infraAsCode
+  - enforceInfraAsCode
+  - recycleProd
+  - firewall
+  - hostFirewall
+  - patchFrequently
+  - monitorVulns
+  - oneDayPatch
+  - auditLogging
+  - auditLogAggregation
+  - incidentResponsePlan
+  - incidentResponseCo
+  - auditLogProtection
+  - enumeratePII
+  - intrusionAlerts
+  - backups
+  - availabilityAlerts
+  - ddosProtection
+  - ddosTests
