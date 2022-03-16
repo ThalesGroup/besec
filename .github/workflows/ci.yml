@@ -96,7 +96,7 @@ jobs:
         with:
           images: gcr.io/besec-project/besec
           flavor: |
-            latest=auto
+            latest=false
             prefix=debug-
           tags: |
             type=raw,value=run-${{github.run_id}}-${{github.run_attempt}}
