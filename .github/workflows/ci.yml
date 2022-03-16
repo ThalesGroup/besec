@@ -33,7 +33,7 @@ jobs:
         with:
           path: |
             ~/.npm
-          key: ${{ env.cache-name }}-npm-${{ hashFiles('ui/package-lock.json') }}
+          key: ${{ env.cache-name }}-${{ hashFiles('ui/package-lock.json') }}
           restore-keys: |
             ${{ env.cache-name }}-
 
