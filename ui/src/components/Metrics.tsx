@@ -14,7 +14,12 @@ import {
     SerializedProject,
 } from '../redux/projects'
 import { fetchPlan, makeSelectApplicablePracticeIDs, selectAnswersIfReady, selectPlanStatesById } from '../redux/plans'
-import { ExtendedPractice, selectPracticesVersion, selectPracticesByIdIfFetched } from '../redux/practices'
+import {
+    ExtendedPractice,
+    selectPracticesVersion,
+    selectPracticesByIdIfFetched,
+    fetchPractices,
+} from '../redux/practices'
 import * as api from '../client'
 import { ErrorMsg } from './common/common'
 import { Refresh } from './common/Refresh'
@@ -140,6 +145,15 @@ function ProjectMetrics(props: { id: string; history: boolean; refresh?: boolean
             return { id, fetched: false, fetching: false }
         }
     })
+
+    // Fetch referenced practices (if necessary)
+    useEffect(() => {
+        plans.forEach((plan) => {
+            if (plan.practicesVersion) {
+                dispatch(fetchPractices({ version: plan.practicesVersion }))
+            }
+        })
+    }, [plans, dispatch])
 
     // Propagate that manual refresh of this project is complete
     // Relies upon happening after the preceding useEffect that triggers the fetches
