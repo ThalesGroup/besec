@@ -106,6 +106,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: besec
+      - run: chmod +x besec
 
       - id: auth
         name: Authenticate to Google Cloud

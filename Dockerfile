@@ -16,7 +16,6 @@ COPY --from=prep /prep/passwd /etc/passwd
 COPY --from=prep /prep/group /etc/group
 
 COPY ./besec /besec
-RUN chmod +x /besec
 
 ENV PATH=/
 
