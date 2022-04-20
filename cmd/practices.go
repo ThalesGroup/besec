@@ -29,7 +29,6 @@ type practicesCmd struct {
 
 const serviceAccountFlagName = "service-account"
 const practicesDirFlagName = "practices-dir"
-const localPracticesDirFlagName = "local-practices-dir"
 
 func newPracticesCmd(rc *rootCmd) *practicesCmd {
 	mc := &practicesCmd{}
@@ -43,12 +42,11 @@ func newPracticesCmd(rc *rootCmd) *practicesCmd {
 
 			if cmd.Name() != "prune" {
 				practicesDir := viper.GetString(practicesDirFlagName)
-				deltaDir := viper.GetString(localPracticesDirFlagName)
 				schemaFile := viper.GetString("schema-file")
 				if schemaFile == "" {
 					schemaFile = filepath.Join(practicesDir, "schema.json")
 				}
-				mc.parser = lib.NewPracticeParser(practicesDir, deltaDir, schemaFile, nil)
+				mc.parser = lib.NewPracticeParser(practicesDir, schemaFile, nil)
 			}
 
 			if cmd.Name() != "check" {
@@ -66,12 +64,6 @@ func newPracticesCmd(rc *rootCmd) *practicesCmd {
 
 	mc.PersistentFlags().String(practicesDirFlagName, "./practices", "A directory containing practice definitions")
 	err := viper.BindPFlag(practicesDirFlagName, mc.PersistentFlags().Lookup(practicesDirFlagName))
-	if err != nil {
-		log.Fatalf("Error binding viper flag: %v", err)
-	}
-
-	mc.PersistentFlags().String(localPracticesDirFlagName, "", "A directory containing deltas to be applied on top of the base practice definitions. Intended for maintaining local modifications whilst still using the public set.")
-	err = viper.BindPFlag(localPracticesDirFlagName, mc.PersistentFlags().Lookup(localPracticesDirFlagName))
 	if err != nil {
 		log.Fatalf("Error binding viper flag: %v", err)
 	}

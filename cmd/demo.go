@@ -38,7 +38,8 @@ func newDemoCmd() *demoCmd {
 	dc.Command = &cobra.Command{
 		Use:   "demo [remove]",
 		Short: "Load demo data into a running instance",
-		Long:  `Load data from the demo directory in to the specified instance.\nIf remove is specified, remove any projects that have the same name and plan dates as demo projects.`,
+		Long: `Load data from the demo directory in to the specified instance.
+If remove is specified, remove any projects that have the same name and plan dates as demo projects.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			checkEmulator()
 			endpoint := viper.GetString("endpoint")
@@ -91,7 +92,7 @@ func newDemoCmd() *demoCmd {
 	return dc
 }
 
-// Load creates the projects and plans from d.data in the configured instance
+// Load creates the projects and plans from dc.Data in the configured instance
 func (dc *demoCmd) Load() {
 	dc.loadPractices()
 
@@ -146,11 +147,14 @@ func (dc *demoCmd) loadPractices() {
 	if !found {
 		log.Info("Publishing demo practices")
 		practicesDir := filepath.Join(viper.GetString("demo-dir"), "practices") // initializing the root command resets viper to default values - this has to be called first
-		localDir := filepath.Join(viper.GetString("demo-dir"), "local-practices")
 		noem := fmt.Sprint(viper.GetBool("no-emulator"))
 		schemaFile := filepath.Join(viper.GetString("practices-dir"), "schema.json")
 		rc := newRootCmd()
-		rc.SetArgs([]string{"practices", "publish", "--no-emulator=" + noem, "--schema-file", schemaFile, "--practices-dir", practicesDir, "--local-practices-dir", localDir, "--force-version", "0-demo"})
+		rc.SetArgs([]string{"practices", "publish",
+			"--no-emulator=" + noem,
+			"--schema-file", schemaFile,
+			"--practices-dir", practicesDir,
+			"--force-version", "0-demo"})
 		if rc.Execute() != nil {
 			log.Fatal("Failed to publish demo practices")
 		}

@@ -11,6 +11,13 @@ plans:
       responses:
         practicesVersion: 0-demo
         practiceResponses:
+          gibson:
+            tasks:
+              gibson:
+                answers:
+                  gibson:
+                    answer: "Yes"
+                    notes: "naturally"
           demoPractice:
             tasks:
               useTools:
@@ -25,12 +32,6 @@ plans:
               triageNew:
                 answers:
                   triageNew:
-                    answer: "No"
-          local:
-            tasks:
-              task:
-                answers:
-                  task:
                     answer: "No"
     - details: &rev1details
         projects: ["Alpha", "Beta"]
@@ -62,8 +63,7 @@ plans:
                 answers:
                   admin2FA:
                     answer: "Yes"
-                    notes:
-                      Covering HSMs, AWS, Datacenter servers, Beta admin interface supports it. Everything supports it,
+                    notes: Covering AWS, Datacenter servers, Beta admin interface. Everything supports it,
                       TBC if everything requires it
               adminLeastPrivilegeServices:
                 answers:
@@ -159,9 +159,7 @@ plans:
                 answers:
                   auditLogProtection:
                     answer: "Yes"
-                    notes:
-                      By virtue of having a dedicated external SaaS log store. But not certain on the level of control
-                      over Datadog access.
+                    notes: By virtue of having a dedicated external SaaS log store.
               enumeratePII:
                 answers:
                   enumeratePII:
@@ -331,7 +329,7 @@ plans:
                 answers:
                   perReleaseUpdates:
                     answer: "Unanswered"
-                    notes: TBC. Releases are ~ per-PI. (excl. Luna)
+                    notes: TBC.
               regularUpdates:
                 answers:
                   regularUpdates:
@@ -355,7 +353,6 @@ plans:
                 answers:
                   analyzeHighRiskFeatures:
                     answer: "Yes"
-                    notes: A risk analysis exists for Beta. Aimed to be updated every PI.
               generateTestCases:
                 answers:
                   generateTestCases:

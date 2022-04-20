@@ -11,7 +11,7 @@ level0:
   long: Some code may undergo static analysis, and some effort may go into triaging and managing output, but these
     activities are not performed consistently or reliably.
 
-tasks: [useTools, triageNew, removed]
+tasks: [useTools, triageNew, demo]
 taskDefinitions:
   # in priority order, with maturity questions embedded
   useTools:
@@ -27,6 +27,13 @@ taskDefinitions:
           subset of the recommended configuration?
     level: 1
 
+  demo:
+    title: A task that doesn't appear in subsequent versions
+    description: A task that will disappear.
+    questions:
+      - text: Dummy
+    level: 2
+
   triageNew:
     title: Triage all issues in new code
     description: |
@@ -36,11 +43,3 @@ taskDefinitions:
     questions:
       - text: Are all static analysis issues in code (other than legacy code) routinely identified and triaged?
     level: 4
-
-  removed:
-    title: This isn't going to appear
-    description: |
-      Not included after the delta is applied
-    questions:
-      - text: Why am I here?
-    level: 1

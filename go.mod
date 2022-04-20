@@ -1,6 +1,6 @@
 module github.com/ThalesGroup/besec
 
-go 1.17
+go 1.18
 
 require (
 	cloud.google.com/go/firestore v1.6.1
@@ -14,7 +14,6 @@ require (
 	github.com/go-openapi/swag v0.21.1
 	github.com/go-openapi/validate v0.21.0
 	github.com/gorilla/mux v1.8.0
-	github.com/imdario/mergo v0.3.9 // don't upgrade - breaking changes in 0.3.12
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/rs/cors v1.8.2
 	github.com/santhosh-tekuri/jsonschema/v2 v2.2.0

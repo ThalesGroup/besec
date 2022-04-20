@@ -1,6 +1,6 @@
 id: gibson
 name: Hack the Gibson
-notes: This practice isn't applicable to many organizations. You can remove it using the local-practices feature.
+notes: This practice isn't applicable to many organizations.
 
 tasks: [gibson]
 taskDefinitions:

@@ -158,9 +158,6 @@ plans: # Each plan is an array of plan revisions
                     answer: "Yes"
                   securityLabel:
                     answer: "No"
-                    notes:
-                      Lots of issues are security issues. TeS JIRA does have a Security attribute (not label). New JIRA
-                      has a security label but it isn't being used.
               definitionOfDone:
                 priority: true
                 answers:
@@ -198,9 +195,6 @@ plans: # Each plan is an array of plan revisions
                 answers:
                   toolEnforced:
                     answer: "No"
-                    notes:
-                      Review Board might be useful here - integrates with JIRA. Gitlab protected branches have been used
-                      on some projects too.
                 priority: true
               audit:
                 answers:
@@ -238,7 +232,7 @@ plans: # Each plan is an array of plan revisions
                 answers:
                   useTools:
                     answer: "No"
-                    notes: golint is used. No static analysis of javascript or python.
+                    notes: golangci-lint is used. No static analysis of javascript or python.
               triageNew:
                 answers:
                   triageNew:
@@ -460,8 +454,7 @@ plans: # Each plan is an array of plan revisions
                     notes: Answer here is only for the core team - don't know about other teams.
                   acceptanceCriteria:
                     answer: "Yes"
-                    notes:
-                      Not all stories have acceptance criteria, but they are reasonable exceptions - tiny bug fixes etc.
+                    notes: Not all stories have acceptance criteria, but they are reasonable exceptions - tiny bug fixes etc.
               documentedProcess:
                 answers:
                   documentedProcess:
