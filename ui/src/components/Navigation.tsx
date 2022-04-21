@@ -106,7 +106,7 @@ export default function Navigation(props: { children?: any }) {
                     </a>
                 </div>
                 <Typography variant="h6" noWrap>
-                    BeSec: {/*<tagline>*/}
+                    BeSec
                 </Typography>
                 {loggedIn && <UserMenu />}
             </Toolbar>

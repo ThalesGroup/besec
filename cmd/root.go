@@ -43,8 +43,8 @@ func newRootCmd() *rootCmd {
 	// the base command when called without any subcommands
 	rc.Command = &cobra.Command{
 		Use:   "besec",
-		Short: "<tagline>",
-		Long:  `besec <tagline>?`,
+		Short: "BeSec server and and admin CLI",
+		Long:  `BeSec server and and admin CLI.`,
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			if viper.GetBool("verbose") {
 				log.SetLevel(log.DebugLevel)

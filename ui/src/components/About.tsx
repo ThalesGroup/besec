@@ -12,8 +12,8 @@ export default function About() {
     return (
         <>
             <Typography variant="body1" gutterBottom>
-                BeSec is a {/*<tagline>*/}practical framework of best practices, processes, and tools applied to product
-                development activities to improve the overall security of our products. You can learn more about BeSec{' '}
+                BeSec is a practical framework of best practices, processes, and tools applied to product development
+                activities to improve the overall security of our products. You can learn more about BeSec{' '}
                 <a href="https://github.com/ThalesGroup/besec">here</a>.
             </Typography>
 

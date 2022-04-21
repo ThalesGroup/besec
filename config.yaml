@@ -3,7 +3,6 @@
 # practices-dir: /path/to/alternative/practices/directory
 
 # endpoint: https://besec.example.com #
-# Set your bearer token via the BESEC_ACCESS_TOKEN environment variable, rather than here
 
 gcp-project: my-gcp-project-id
 service-account: cli-administrator@<gcp-project>.iam.gserviceaccount.com
@@ -15,7 +14,7 @@ alert-first-login: false
 auth:
   gcpAuthDomain: <project>.firebaseapp.com
   gcpPublicApiKey: mahqu...GCl-tX4
-  providers:
+  providers: # configured in Google Identity Platform: https://console.cloud.google.com/customer-identity/providers
     - id: google.com
     - id: saml.my-provider
       whitelisted: true

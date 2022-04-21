@@ -17,12 +17,17 @@ the issue will be included in the release notes.
 
 ## Security related configuration
 
-TODO Settings users should consider that would impact the security posture of
-deploying this project, such as HTTPS, authorization and many others.
+Authentication is managed by an external identity provider. You may wish to run
+this app within your private network / VPN, or behind a service such as Google
+Identity Proxy.
 
-## Known security gaps & future enhancements
+Take care about white-listing an Identity Provider: this means that all users
+who have an account with this identity provider will have access to your
+instance. It is only suitable if the scope of the IdP and the target users of
+the app align.
 
-There is no authorization policy: all users can perform all actions. If you need
-to limit which users can modify particular projects, PRs are welcome! Note that
-all admin tasks are via the CLI - we do not intend to implement admin
-functionality in the web app.
+Once a user is authorized to use the app, there is no further access control:
+all users can perform all actions. If you need to limit which users can modify
+particular projects, PRs are welcome! Note that all admin tasks are via the
+CLI, we will not accept contributions that add admin functionality to the web
+app.
