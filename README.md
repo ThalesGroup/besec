@@ -85,7 +85,7 @@ Google Cloud Platform. BeSec depends on GCP's Cloud Firestore and Firebase
 Auth; if you would like to support alternative databases or authentication
 systems, PRs are welcome.
 
-See the [CONTRIBUTING.md](./CONTRIBUTING.md) file for instructions on running
+See the [CONTRIBUTING.md](./docs/CONTRIBUTING.md) file for instructions on running
 the server locally.
 
 ### Configure
@@ -95,7 +95,7 @@ Config options can be set using any of:
 -   commandline flags (run `besec help` for a comprehensive listing of all options)
 -   the [`config.yaml`](./config.yaml) file. Keys have the same name as the commandline flags.
 -   environment variables, names are the same as the commandline flags, in upper case,
-    prefixed with `BESEC_`, and with dashes replaced with underscores. e.g. BESEC_GCP_PROJECT
+    prefixed with `BESEC_`, and with dashes replaced with underscores. e.g. `BESEC_GCP_PROJECT`
 
 ## Manage
 
@@ -128,9 +128,9 @@ user tries to log in but is not authorized. To authorize a user:
 
 ```
 $ besec users list
-UID                             Email                      Display name    Provider            Status
-0C3usgiCJWaxikvduaSdzGRUCLt1    joe.bloggs@example.com    'Joe Bloggs'     saml.my-provider
-88Jkby6RamVqz4JGHfF19vK0Lzs1    jane.doe@example.com      'Jane Doe'       google.com          [manually authorized]
+UID                           Email                    Display name  Provider          Status
+0C3usgiCJWaxikvduaSdzGRUCLt1  joe.bloggs@example.com  'Joe Bloggs'   saml.my-provider
+88Jkby6RamVqz4JGHfF19vK0Lzs1  jane.doe@example.com    'Jane Doe'     google.com        [manually authorized]
 ...
 
 $ besec users authorize 0C3usgiCJWaxikvduaSdzGRUCLt1
