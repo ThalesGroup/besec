@@ -21,6 +21,7 @@ import (
 	"github.com/ThalesGroup/besec/api/models"
 )
 
+// UIDir holds the embedded static web files
 var UIDir http.FileSystem //nolint:gochecknoglobals // we could embed this in a special serve command struct, but it adds a lot of complexity
 
 const stackdriverLogsFlagName = "stackdriver-logs"
