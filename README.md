@@ -75,10 +75,12 @@ After deploying the application with your organization's security practices, the
 
 ## Deploy
 
-BeSec is distributed as a binary and a containerized version of the binary. The
+BeSec is distributed as a
+[binary](https://github.com/ThalesGroup/besec/releases) and a
+[containerized](https://gcr.io/besec-project/besec) version of the binary. The
 tool functions as both application server and admin client CLI.
 
-See the `deploy` directory for a Terraform configuration to deploy the site to
+See the `deploy` directory for a Terraform configuration to deploy the app to
 Google Cloud Platform. BeSec depends on GCP's Cloud Firestore and Firebase
 Auth; if you would like to support alternative databases or authentication
 systems, PRs are welcome.

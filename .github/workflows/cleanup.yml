@@ -29,19 +29,19 @@ jobs:
       - name: Get old besec images
         run: |
           # Get digests and tags of containers that are older than two weeks, ignoring any that have multiple tags (tags are separated by ;)
-          gcloud container images list-tags gcr.io/$GCP_PROJECT/besec \
+          gcloud container images list-tags gcr.io/besec-project/besec \
             --filter "timestamp.datetime<-P2W" --format="value[no-transforms](digest,tags)" \
             | grep -v ';' \
-            |  sed -e "s,^,gcr.io/$GCP_PROJECT/besec@," \
+            |  sed -e "s,^,gcr.io/besec-project/besec@," \
             > old || echo "no old besec images"
 
       - name: Get old build images
         run: |
           # get everything but the latest builder image
-          gcloud container images list-tags gcr.io/$GCP_PROJECT/build \
+          gcloud container images list-tags gcr.io/besec-project/build \
             --format="value[no-transforms](digest,tags)" \
             | grep -v latest \
-            |  sed -e "s,^,gcr.io/$GCP_PROJECT/build@," \
+            |  sed -e "s,^,gcr.io/besec-project/build@," \
             >> old || echo "no old builder images"
 
       - name: Delete images

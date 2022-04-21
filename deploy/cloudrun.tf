@@ -31,7 +31,7 @@ resource "google_cloud_run_service" "prod" {
   template {
     spec {
       containers {
-        image = "gcr.io/${var.gcp-project}/besec:${var.image-tag}"
+        image = "gcr.io/besec-project/besec:${var.image-tag}"
         args = ["serve",
           "--gcp-project=${var.gcp-project}",
           "--slack-webhook-name=${var.slack-webhook-name}",

@@ -98,7 +98,7 @@ See ui/README.md for guidance on developing the frontend.
 
 To use the container instead of the besec binary, you can run it like this:
 
-    docker run -p8080:8080 --env GOOGLE_APPLICATION_CREDENTIALS=/gcp.json --mount type=bind,source=/home/<username>/.config/gcloud/application_default_credentials.json,destination=/gcp.json besec serve -v --no-emulator`
+    docker run -p8080:8080 --env GOOGLE_APPLICATION_CREDENTIALS=/gcp.json --mount type=bind,source=/home/<username>/.config/gcloud/application_default_credentials.json,destination=/gcp.json gcr.io/besec-project/besec serve -v --no-emulator`
 
 ## Local Testing
 
