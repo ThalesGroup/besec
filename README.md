@@ -126,9 +126,9 @@ user tries to log in but is not authorized. To authorize a user:
 
 ```
 $ besec users list
-UID                             Email                                   Display name            Provider                Status
-0C3usgiCJWaxikvduaSdzGRUCLt1    joe.bloggs@example.com                  'Joe Bloggs'            saml.my-provider
-88Jkby6RamVqz4JGHfF19vK0Lzs1    jane.doe@example.com                    'Jane Doe'              google.com              [manually authorized]
+UID                             Email                      Display name    Provider            Status
+0C3usgiCJWaxikvduaSdzGRUCLt1    joe.bloggs@example.com    'Joe Bloggs'     saml.my-provider
+88Jkby6RamVqz4JGHfF19vK0Lzs1    jane.doe@example.com      'Jane Doe'       google.com          [manually authorized]
 ...
 
 $ besec users authorize 0C3usgiCJWaxikvduaSdzGRUCLt1

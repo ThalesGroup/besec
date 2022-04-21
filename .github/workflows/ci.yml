@@ -59,7 +59,7 @@ jobs:
           echo make testgo >> jobs
           echo make testui >> jobs
           echo ./besec practices check >> jobs
-          mkdir examplePractice && mv examplePractice.yaml examplePractice/
+          mkdir examplePractice && mv docs/examplePractice.yaml examplePractice/
           echo './besec practices check --practices-dir=examplePractice --schema-file=practices/schema.json' >> jobs
           parallel --verbose --keep-order < jobs
 
