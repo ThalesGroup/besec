@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/ui"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0 # security updates only
+
+  - package-ecosystem: "github-actions"
+    # Workflow files stored in the
+    # default location of `.github/workflows`
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 0 # security updates only
+
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0 # security updates only
+
+ # /store/migrations has no entry as we don't even want security updates for this local utility
+ # it is not exposed to malicious input, but as a big dependency tree (thanks npm!), so we get a lot of notifications
