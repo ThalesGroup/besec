@@ -1,0 +1,95 @@
+id: slsa
+name: Supply Chain Integrity
+
+notes: |
+  This practice embeds 'Supply chain Levels for Software Artifacts', or
+  SLSA (salsa), from https://slsa.dev.
+
+  Any software can introduce vulnerabilities into a supply chain. As a
+  system gets more complex, it’s critical to already have checks and best
+  practices in place to guarantee artifact integrity, that the source code you’re
+  relying on is the code you’re actually using. Without solid foundations and a
+  plan for the system as it grows, it’s difficult to focus your efforts against
+  tomorrow’s next hack, breach or compromise.
+
+  SLSA is a security framework, a check-list of standards and controls to
+  prevent tampering, improve integrity, and secure packages and infrastructure
+  in your projects, businesses or enterprises. It’s how you get from safe
+  enough to being as resilient as possible, at any link in the chain.
+
+  The BeSec version of SLSA adds questions to the base SLSA requirements.
+
+# no qualifying questions
+
+level0:
+  short: No guarantees
+  long: A project at level 0 on the maturity scale has little visibility into its software supply chain, and records no provenance information about builds.
+
+taskDefinitions:
+  # Title and description copy/pasted from https://slsa.dev/spec/v0.1/requirements - there is no machine-readable definition at the time of writing
+  # The levels match to BeSec levels with no modification.
+
+  ## SOURCE
+
+  versionControlled:
+    title: "Source: Version controlled"
+    description: |
+      Every change to the source is tracked in a version control system that
+      meets the following requirements:
+
+       - [Change history] There exists a record of the history of changes that
+         went into the revision. Each change must contain: the identities of the
+         uploader and reviewers (if any), timestamps of the reviews (if any) and
+         submission, the change description/justification, the content of the
+         change, and the parent revisions.
+
+       - [Immutable reference] There exists a way to indefinitely reference this
+         particular, immutable revision. In git, this is the {repo URL +
+         branch/tag/ref + commit ID}.
+
+      Most popular version control system meet this requirement, such as git,
+      Mercurial, Subversion, or Perforce.
+
+      NOTE: This does NOT require that the code, uploader/reviewer identities,
+      or change history be made public. Rather, some organization must attest
+      to the fact that these requirements are met, and it is up to the consumer
+      whether this attestation is sufficient.
+
+    questions:
+      - text: Is all source tracked in a tool such as git that records history and creates an immutable reference for each revision?
+    level: 2
+
+  ## BUILD
+
+  ## PROVENANCE
+
+  # Requirements on the process by which provenance is generated and consumed:
+
+  provenenceAvailable:
+    title: "Provenance generation: available"
+    description: |
+      The provenance is available to the consumer in a format that the consumer
+      accepts. The format SHOULD be in-toto SLSA Provenance, but another format
+      MAY be used if both producer and consumer agree and it meets all the
+      other requirements.
+    questions:
+      - text: Is the provenance available in a format that consumers accept, such as in-toto SLSA Provenance?
+    level: 1
+
+  # Requirements on the contents of the provenance:
+  provenenceIdentifiesArtifact:
+    title: "Provenence: Identifies artifact"
+    description: |
+      The provenance MUST identify the output artifact via at least one cryptographic
+      hash. The provenance MAY provide multiple identifying cryptographic hashes
+      using different algorithms. When only one hash is provided, the RECOMMENDED
+      algorithm is SHA-256 for cross-system compatibility. If another algorithm is
+      used, it SHOULD be resistant to collisions and second preimages.
+    questions:
+      - text: Does the provenance identify the artifact it is for using a hash such as SHA-256?
+    level: 1
+
+  ## COMMON
+
+tasks:
+  - todo, list task ids
