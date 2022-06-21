@@ -4,6 +4,7 @@ terraform.tfstate
 .terraform
 config.local.yaml
 node_modules
+.vscode/*.log
 
 # firebase
 .firebaserc
