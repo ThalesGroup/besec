@@ -211,9 +211,12 @@ taskDefinitions:
     title: "Build: Scripted build"
     description: |
       All build steps were fully defined in some sort of “build script”. The only
-      manual command, if any, was to invoke the build script. Examples:  Build
-      script is Makefile, invoked via make all. Build script is
-      .github/workflows/build.yaml, invoked by GitHub Actions.
+      manual command, if any, was to invoke the build script. 
+      
+      Examples:  
+        Build script is Makefile, invoked via make all. 
+        Build script is .github/workflows/build.yaml, invoked by GitHub Actions.
+      
     questions:
       - text: Are all build steps fully defined in a build script?
     level: 1
@@ -222,7 +225,11 @@ taskDefinitions:
     title: "Build: Build service"
     description: |
       All build steps ran using some build service, not on a developer’s
-      workstation. Examples: GitHub Actions, Google Cloud Build, Travis CI.
+      workstation. 
+      
+      Examples: 
+        GitHub Actions, Google Cloud Build, Travis CI.
+        
     questions: 
       - text: Do all build steps run in a build service?
     level: 2
@@ -234,10 +241,13 @@ taskDefinitions:
       verifiably derived from text file definitions stored in a version control
       system. Verifiably derived can mean either fetched directly through a
       trusted channel, or that the derived definition has some trustworthy
-      provenance chain linking back to version control. Examples: 
-      .github/workflows/build.yaml stored in git Tekton bundles generated from
+      provenance chain linking back to version control. 
+      
+      Examples: 
+        .github/workflows/build.yaml stored in git Tekton bundles generated from
       text files by a SLSA compliant build process and stored in an OCI registry
       with SLSA provenance metadata available.
+      
     questions: 
       - text: Is the build script stored in a version control system?
     level: 3
