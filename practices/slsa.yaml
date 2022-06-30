@@ -631,7 +631,7 @@ taskDefinitions:
       Only a small number of platform admins may override the guarantees listed
       here. Doing so MUST require approval of a second platform admin.
     questions:
-      - text: Do only only a small number of platform admins may override the guarantees?
+      - text: Can only a small number of platform admins override the guarantees described in this practice?
         id: override
       - text: Does override require approval of a second platform admin?
         id: approval
