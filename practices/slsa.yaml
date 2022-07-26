@@ -234,7 +234,7 @@ taskDefinitions:
     level: 2
 
   buildCode:
-  - title: "Build: Build as code"
+    title: "Build: Build as code"
     description: |
       The build definition and configuration executed by the build service is
       verifiably derived from text file definitions stored in a version control
@@ -255,7 +255,7 @@ taskDefinitions:
     level: 3
 
   buildEphemeral:
-  - title: "Build: Ephemeral environment"
+    title: "Build: Ephemeral environment"
     description: |
       The build service ensured that the build steps ran in an ephemeral
       environment, such as a container or VM, provisioned solely for this build,
@@ -265,7 +265,7 @@ taskDefinitions:
     level: 3
 
   buildIsolated:
-  - title: "Build: Isolated"
+    title: "Build: Isolated"
     description: |
       The build service ensured that the build steps ran in an isolated
       environment free of influence from other build instances, whether prior or
@@ -283,7 +283,7 @@ taskDefinitions:
     level: 3
 
   buildParameterless:
-  - title: "Build: Parameterless"
+    title: "Build: Parameterless"
     description: |
       The build output cannot be affected by user parameters other than the build
       entry point and the top-level source location. In other words, the build is
@@ -298,7 +298,7 @@ taskDefinitions:
     level: 4
 
   buildHermetic:  
-  - title: "Build: Hermetic"
+    title: "Build: Hermetic"
     description: |
       All transitive build steps, sources, and dependencies were fully declared up
       front with immutable references, and the build steps ran with no network
@@ -325,7 +325,7 @@ taskDefinitions:
     level: 4
 
   buildReproducible:
-  - title: "Build: Reproducible"
+    title: "Build: Reproducible"
     description: |
       Re-running the build steps with identical input artifacts results in
       bit-for-bit identical output. Builds that cannot meet this MUST provide a
