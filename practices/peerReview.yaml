@@ -1,8 +1,6 @@
 id: peerReview
 name: Peer Review
 
-# no page - this practice is entirely contained within these tasks
-
 notes: |
   Regular, change-based code review, as well as reviews of test cases, test implementation, test coverage, feature
   design, etc., improve product quality and security.

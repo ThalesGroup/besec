@@ -1,0 +1,702 @@
+id: slsa
+name: Supply Chain Integrity
+
+notes: |
+  This practice embeds 'Supply chain Levels for Software Artifacts', or
+  SLSA (pronounced salsa), from https://slsa.dev.
+
+  Any software can introduce vulnerabilities into a supply chain. As a
+  system gets more complex, it’s critical to already have checks and best
+  practices in place to guarantee artifact integrity, that the source code you’re
+  relying on is the code you’re actually using. Without solid foundations and a
+  plan for the system as it grows, it’s difficult to focus your efforts against
+  tomorrow’s next hack, breach or compromise.
+
+  SLSA is a security framework, a check-list of standards and controls to
+  prevent tampering, improve integrity, and secure packages and infrastructure
+  in your projects, businesses or enterprises. It’s how you get from safe
+  enough to being as resilient as possible, at any link in the chain.
+
+  The BeSec version of SLSA adds questions to the base SLSA requirements.
+
+  Definitions
+  -----------
+
+  Immutable reference: An identifier that is guaranteed to always
+  point to the same, immutable artifact. This MUST allow the consumer to locate
+  the artifact and SHOULD include a cryptographic hash of the artifact’s
+  contents to ensure integrity. Examples: git URL + branch/tag/ref + commit ID;
+  cloud storage bucket ID + SHA-256 hash; Subversion URL (no hash).
+
+  Provenance: Metadata about how an artifact was produced.
+
+  Revision: An immutable, coherent state of a source. In Git, for example, a
+  revision is a commit in the history reachable from a specific branch in a
+  specific repository. Different revisions within one repo MAY have different
+  levels. Example: the most recent revision on a branch meets SLSA 4 but very old
+  historical revisions before the cutoff do not.
+
+  Strong authentication: Authentication that maps back to a specific person using
+  an authentication mechanism which is resistant to account and credential
+  compromise. For example, 2-factor authentication (2FA) where one factor is a
+  hardware security key (i.e. YubiKey).
+
+  Trusted persons: Set of persons who are granted the authority to maintain a
+  software project. For example, https://github.com/MarkLodato/dotfiles has just
+  one trusted person (MarkLodato), while https://hg.mozilla.org/mozilla-central
+  has a set of trusted persons with write access to the mozilla-central
+  repository.
+
+# no qualifying questions
+
+level0:
+  short: No guarantees
+  long: |
+    A project at level 0 on the maturity scale either has builds that are not 
+    fully scripted, or doesn't record provenance information about builds in
+    a usable manner.
+
+taskDefinitions:
+  # Title and description copy/pasted from https://slsa.dev/spec/v0.1/requirements - there is no machine-readable definition at the time of writing,
+  # see https://github.com/slsa-framework/slsa/issues/377
+
+  # The levels match to BeSec levels with no modification.
+
+  ############
+  ## SOURCE ##
+  ############
+
+  sourceVersionControlled:
+    title: "Source: Version controlled"
+    description: |
+      Every change to the source is tracked in a version control system that
+      meets the following requirements:
+
+       - [Change history] There exists a record of the history of changes that
+         went into the revision. Each change must contain: the identities of the
+         uploader and reviewers (if any), timestamps of the reviews (if any) and
+         submission, the change description/justification, the content of the
+         change, and the parent revisions.
+
+       - [Immutable reference] There exists a way to indefinitely reference this
+         particular, immutable revision. In git, this is the {repo URL +
+         branch/tag/ref + commit ID}.
+
+      Most popular version control system meet this requirement, such as git,
+      Mercurial, Subversion, or Perforce.
+
+      NOTE: This does NOT require that the code, uploader/reviewer identities,
+      or change history be made public. Rather, some organization must attest
+      to the fact that these requirements are met, and it is up to the consumer
+      whether this attestation is sufficient.
+
+    questions:
+      - text: Is all source tracked in a tool such as git that records history and creates an immutable reference for each revision?
+    level: 2
+
+  sourceVerifiedHistory:
+    title: "Source: Verified history"
+    description: |
+      Every change in the revision’s history has at least one strongly
+      authenticated actor identity (author, uploader, reviewer, etc.) and
+      timestamp. It must be clear which identities were verified, and those
+      identities must use two-step verification or similar. (Exceptions noted
+      below.)
+
+      - [First-parent history] In the case of a non-linear version control system,
+      where a revision can have more than one parent, only the “first parent
+      history” is in scope. In other words, when a feature branch is merged back
+      into the main branch, only the merge itself is in scope.
+
+      - [Historical cutoff] There is some TBD exception to allow existing projects
+      to meet SLSA 3/4 even if historical revisions were present in the history.
+      Current thinking is that this could be either last N months or a platform
+      attestation guaranteeing that future changes in the next N months will meet
+      the requirements.
+
+    questions:
+      - text: Are all authors identified in revision history strongly authenticated (2fa)?
+    level: 3
+
+  sourceRetained18M:
+    title: "Source: Retained for at least 18 months"
+    description: |
+      (This is the level 3 version of the 'retained indefinitely' requirement)
+
+      The revision and its change history are preserved indefinitely and cannot
+      be deleted, except when subject to an established and transparent policy
+      for obliteration, such as a legal or policy requirement.
+
+      - [Immutable history] It must not be possible for persons to delete or
+        modify the history, even with multi-party approval, except by trusted
+        platform admins with two-party approval following the obliterate policy.
+
+      - [Limited retention for SLSA 3] At SLSA 3 (but not 4), it is acceptable
+        for the retention to be limited to 18 months, as attested by the source
+        control platform.
+
+         - Example: If a commit is made on 2020-04-05 and then a retention
+           attestation is generated on 2021-01-01, the commit must be retained
+           until at least 2022-07-01.
+    questions:
+      - text: Is source retained for at least 18 months?
+        id: retained18m
+      - text: Can only platform admins delete source, and they require two-party approval and follow a well-defined process?
+        id: deletion18m
+    level: 3
+
+  # the requirement with the level 3 exception removed
+  sourceRetainedIndefinitely:
+    title: "Source: Retained indefinitely"
+    description: |
+      The revision and its change history are preserved indefinitely and cannot
+      be deleted, except when subject to an established and transparent policy
+      for obliteration, such as a legal or policy requirement.
+
+      - [Immutable history] It must not be possible for persons to delete or
+        modify the history, even with multi-party approval, except by trusted
+        platform admins with two-party approval following the obliterate policy.
+
+    questions:
+      - text: Is source retained indefinitely?
+        id: retained
+      - text: Can only platform admins delete source, and they require two-party approval and follow a well-defined process?
+        id: deletion
+    level: 4
+
+  sourceTwoPersonReviewed:
+    title: "Source: Two-person reviewed"
+    description: |
+      Every change in the revision’s history was agreed to by two trusted persons
+      prior to submission, and both of these trusted persons were strongly
+      authenticated. (Exceptions from Verified History apply here as well.)
+
+      The following combinations are acceptable:
+          - Uploader and reviewer are two different trusted persons.
+          - Two different reviewers are trusted persons.
+
+      - [Different persons] The platform ensures that no person can use alternate
+        identities to bypass the two-person review requirement.
+
+        - Example: if a person uploads with identity X then reviews with alias Y,
+          the platform understands that this is the same person and does not
+          consider the review requirement satisfied.
+
+      - [Informed review] The reviewer is able and encouraged to make an informed
+        decision about what they’re approving. The reviewer should be presented
+        with a full, meaningful content diff between the proposed revision and the
+        previously reviewed revision. For example, it is not sufficient to just
+        indicate that file changed without showing the contents.
+
+      - [Context-specific approvals] Approvals are for a specific context, such as
+        a repo + branch in git. Moving fully reviewed content from one context to
+        another still requires review. (Exact definition of “context” depends on
+        the project, and this does not preclude well-understood automatic or
+        reviewless merges, such as cutting a release branch.)
+
+        - Git example: If a fully reviewed commit in one repo is merged into a
+          different repo, or a commit in one branch is merged into a different
+          branch, then the merge still requires review.
+    questions:
+      - text: Is every change to source agreed to by two trusted and strongly authenticated people?
+    level: 4
+
+  ###########
+  ## BUILD ##
+  ###########
+  
+  # Requirements on build process:
+  
+  buildScripted:
+    title: "Build: Scripted build"
+    description: |
+      All build steps were fully defined in some sort of “build script”. The only
+      manual command, if any, was to invoke the build script. 
+      
+      Examples:  
+        - Build script is Makefile, invoked via make all. 
+        - Build script is .github/workflows/build.yaml, invoked by GitHub Actions.
+      
+    questions:
+      - text: Are all build steps fully defined in a build script?
+    level: 1
+
+  buildService:
+    title: "Build: Build service"
+    description: |
+      All build steps ran using some build service, not on a developer’s
+      workstation. 
+      
+      Examples: GitHub Actions, Google Cloud Build, Travis CI.
+        
+    questions: 
+      - text: Do all build steps run in a build service?
+    level: 2
+
+  buildCode:
+    title: "Build: Build as code"
+    description: |
+      The build definition and configuration executed by the build service is
+      verifiably derived from text file definitions stored in a version control
+      system.
+      
+      Verifiably derived can mean either fetched directly through a
+      trusted channel, or that the derived definition has some trustworthy
+      provenance chain linking back to version control. 
+      
+      Examples: 
+        - .github/workflows/build.yaml stored in git
+        - Tekton bundles generated from text files by a SLSA compliant build process
+          and stored in an OCI registry with SLSA provenance metadata available.
+      
+    questions: 
+      - text: Are the build script and configuration verifiably derived from
+              a version control system?
+    level: 3
+
+  buildEphemeral:
+    title: "Build: Ephemeral environment"
+    description: |
+      The build service ensured that the build steps ran in an ephemeral
+      environment, such as a container or VM, provisioned solely for this build,
+      and not reused from a prior build.
+    questions: 
+      - text: Are build steps run in an ephemeral environment?
+    level: 3
+
+  buildIsolated:
+    title: "Build: Isolated"
+    description: |
+      The build service ensured that the build steps ran in an isolated
+      environment free of influence from other build instances, whether prior or
+      concurrent.
+      
+      - It MUST NOT be possible for a build to access any secrets of
+      the build service, such as the provenance signing key.
+      - It MUST NOT be possible for two builds that overlap in time to influence
+        one another.
+      - It MUST NOT be possible for one build to persist or influence the build
+      environment of a subsequent build.
+      - Build caches, if used, MUST be purely content-addressable to prevent tampering.
+    questions:
+      - text: Is the build run in an isolated environment?
+    level: 3
+
+  buildParameterless:
+    title: "Build: Parameterless"
+    description: |
+      The build output cannot be affected by user parameters other than the build
+      entry point and the top-level source location. In other words, the build is
+      fully defined through the build script and nothing else.
+      
+      Examples:
+       - GitHub Actions workflow_dispatch inputs MUST be empty.
+       - Google Cloud Build user-defined substitutions MUST be empty. (Default substitutions, whose
+         values are defined by the server, are acceptable.)
+    questions:
+      - text: Is the build fully defined through the build script that does not have any parameters?
+    level: 4
+
+  buildHermetic:  
+    title: "Build: Hermetic"
+    description: |
+      All transitive build steps, sources, and dependencies were fully declared up
+      front with immutable references, and the build steps ran with no network
+      access.
+      
+      The user-defined build script:
+       - MUST declare all dependencies, including sources and other build steps, 
+         using immutable references in a format that the build service understands.
+      
+      The build service:
+       - MUST fetch all artifacts in a trusted control plane.
+       - MUST NOT allow mutable references.
+       - MUST verify the integrity of each artifact.
+         - If the immutable reference includes a cryptographic hash, the service MUST 
+           verify the hash and reject  the fetch if the verification fails.
+         - Otherwise, the service MUST fetch the artifact over a channel that 
+           ensures transport integrity, such as TLS or code signing.
+       - MUST prevent network access while running the build steps. 
+         - This requirement is “best effort.” It SHOULD deter a reasonable team from
+           having a non-hermetic build, but it need not stop a determined adversary.
+           For example, using a container to prevent network access is sufficient.
+    questions:
+      - text: Does the build satisfy the hermetic requirements described above?
+    level: 4
+
+  buildReproducible:
+    title: "Build: Reproducible"
+    description: |
+      Re-running the build steps with identical input artifacts results in
+      bit-for-bit identical output. Builds that cannot meet this MUST provide a
+      justification why the build cannot be made reproducible.
+      
+      This requirement is “best effort”. The user-provided build script SHOULD declare
+      whether the build is intended to be reproducible or a justification why not.
+      The build service MAY blindly propagate this intent without verifying
+      reproducibility. A consumer MAY reject the build if it does not reproduce.
+    questions: 
+      - text: Is the build reproducible?
+              (As this is recommended but not required to achieve any SLSA level, 
+              don't answer "No" to this question - use "N/A" instead.)
+        na: true
+    level: 4
+
+
+  ################
+  ## PROVENANCE ##
+  ################
+
+  # Requirements on the process by which provenance is generated and consumed:
+
+  provenanceAvailable:
+    title: "Provenance generation: available"
+    description: |
+      The provenance is available to the consumer in a format that the consumer
+      accepts. The format SHOULD be in-toto SLSA Provenance, but another format
+      MAY be used if both producer and consumer agree and it meets all the
+      other requirements.
+    questions:
+      - text: Is the provenance available in a format that consumers accept, such as in-toto SLSA Provenance?
+    level: 1
+
+  provenanceAuthenticated:
+    title: "Provenance generation: Authenticated"
+    description: |
+      The provenance’s authenticity and integrity can be verified by the consumer.
+      This SHOULD be through a digital signature from a private key accessible only
+      to the service generating the provenance.
+    questions:
+      - text: Can consumers verify the authenticity and integrity of the provenance?
+    level: 2
+
+  provenanceServiceGenerated:
+    title: "Provenance generation: Service generated"
+    description: |
+      The data in the provenance MUST be obtained from the build service
+      (either because the generator is the build service or because the
+      provenance generator reads the data directly from the build service).
+
+      Regular users of the service MUST NOT be able to inject or alter the
+      contents, except as noted below.
+
+      The following provenance fields MAY be generated by the user-controlled
+      build steps:
+
+        - The output artifact hash from Identifies Artifact.
+
+          - Reasoning: This only allows a “bad” build to falsely claim that it
+            produced a “good” artifact. This is not a security problem because
+            the consumer MUST accept only “good” builds and reject “bad” builds.
+
+        - The “reproducible” boolean and justification from Reproducible.
+    questions:
+      - text: Is the provenance obtained directly from the build service?
+        id: source
+      - text: Are users unable to inject or modify provenance?
+        id: tampering
+    level: 2
+
+  provenanceNonFalsifiable:
+    title: "Provenance generation: Non-falsifiable"
+    description: |
+      Provenance cannot be falsified by the build service’s users.
+
+      NOTE: This requirement is a stricter version of Service Generated.
+
+       - The provenance signing key MUST be stored in a secure key management
+         system accessible only to the build service account.
+
+       - The provenance signing key MUST NOT be accessible to the environment
+         running the user-defined build steps.
+
+       - Every field in the provenance MUST be generated or verified by the
+         build service in a trusted control plane. The user-controlled build
+         steps MUST NOT be able to inject or alter the contents, except as noted
+         below.
+
+      The following provenance fields MAY be generated by the user-controlled
+      build steps without the build service verifying their correctness:
+
+      - The output artifact hash from Identifies Artifact.
+
+        - Reasoning: This only allows a “bad” build to falsely claim that it
+          produced a “good” artifact. This is not a security problem because
+          the consumer MUST accept only “good” builds and reject “bad” builds.
+
+      - The “reproducible” boolean and justification from Reproducible.
+
+    questions:
+      - text: Is the provenance signing key stored in a KMS only accessible to the build account?
+        id: kms
+      - text: Is the provenance signing key not accessible to the environment running
+          the user-defined build steps?
+        id: buildkmsaccess
+      - text: Are all provenance fields under the control of a trusted control plane
+          and can not be modified by the user-defined build steps?
+        id: buildfieldaccess
+    level: 3
+
+  provenanceDependenciesComplete:
+    title: "Provenance generation: Dependencies complete"
+    description: |
+      Provenance records all build dependencies that were available while
+      running the build steps. This includes the initial state of the
+      machine, VM, or container of the build worker.
+
+      - MUST include all user-specified build steps, sources, dependencies.
+      - SHOULD include all service-provided artifacts.
+    questions:
+      - text: Does provenance include the build dependencies, including build steps, sources, and state of the build worker.
+    level: 4
+
+  # Requirements on the contents of the provenance:
+
+  provenanceIdentifiesArtifact:
+    title: "Provenance: Identifies artifact"
+    description: |
+      The provenance MUST identify the output artifact via at least one cryptographic
+      hash. The provenance MAY provide multiple identifying cryptographic hashes
+      using different algorithms. When only one hash is provided, the RECOMMENDED
+      algorithm is SHA-256 for cross-system compatibility. If another algorithm is
+      used, it SHOULD be resistant to collisions and second preimages.
+    questions:
+      - text: Does the provenance identify the artifact it is for using a hash such as SHA-256?
+    level: 1
+
+  provenanceIdentifiesBuilder:
+    title: "Provenance: Identified builder"
+    description: |
+      The provenance identifies the entity that performed the build and generated
+      the provenance. This represents the entity that the consumer must trust.
+      Examples: “GitHub Actions with a GitHub-hosted worker”, “jdoe@example.com’s
+      machine”.
+    questions:
+      - text: Does the provenance identify the entity that performed
+          the build and generated the provenance?
+    level: 1
+
+  provenanceIdentifiesBuildInstructions:
+    title: "Provenance: Identifies build instructions"
+    description: |
+      The provenance identifies the top-level instructions used to execute the build.
+
+      The identified instructions SHOULD be at the highest level available to the
+      build (e.g. if the build is told to run build.sh it should list build.sh and
+      NOT the individual instructions in build.sh).
+
+      If build-as-code is used, this SHOULD be the source repo and entry point of the
+      build config (as in the GitHub Actions example).
+
+      If the build isn’t defined in code it MAY list the details of what it was asked
+      to do (as in the [Google Cloud Build RPC example](https://slsa.dev/provenance/v0.2#cloud-build-rpc)
+      or the [Explicitly Run Commands example](https://slsa.dev/provenance/v0.2#explicitly-run-commands)).
+    questions:
+      - text: Does the provenance identify the top-level instructions used to execute the build?
+    level: 1
+
+  provenanceIdentifiesSourceCode2:
+    title: "Provenance: Identifies source code (level 2)"
+    description: |
+      The provenance identifies the repository origin(s) for the source code used in
+      the build.
+
+      The identified repositories SHOULD only include source used directly in the
+      build. The source of dependencies SHOULD NOT be included.
+
+      At level 2 this information MAY come from users and DOES NOT need to be
+      authenticated by the builder.
+
+      At level 3+ this information MUST be authenticated by the builder (i.e. the
+      builder either needs to have fetched the source itself or observed the fetch).
+
+      At level 4 this information MUST be complete (i.e. all source repositories used
+      in the build are listed).
+    questions:
+      - text: Does the provenance include the source code?
+    level: 2
+
+  provenanceIdentifiesSourceCode3:
+    title: "Provenance: Identifies source code (level 3)"
+    description: |
+      The provenance identifies the repository origin(s) for the source code used in
+      the build.
+
+      The identified repositories SHOULD only include source used directly in the
+      build. The source of dependencies SHOULD NOT be included.
+
+      At level 2 this information MAY come from users and DOES NOT need to be
+      authenticated by the builder.
+
+      At level 3+ this information MUST be authenticated by the builder (i.e. the
+      builder either needs to have fetched the source itself or observed the fetch).
+    questions:
+      - text: Does the provenance include the origin of the source code?
+        id: includessource3
+      - text: Is the source code origin in the provenance authenticated (i.e. fetched) by the builder?
+        id: authentic3
+    level: 3
+
+  provenanceIdentifiesSourceCode4:
+    title: "Provenance: Identifies source code (level 4)"
+    description: |
+      The provenance identifies the repository origin(s) for the source code used in
+      the build.
+
+      The identified repositories SHOULD only include source used directly in the
+      build. The source of dependencies SHOULD NOT be included.
+
+      At level 2 this information MAY come from users and DOES NOT need to be
+      authenticated by the builder.
+
+      At level 3+ this information MUST be authenticated by the builder (i.e. the
+      builder either needs to have fetched the source itself or observed the fetch).
+
+      At level 4 this information MUST be complete (i.e. all source
+      repositories used in the build are listed).
+    questions:
+      - text: Does the provenance identify the origin of all the source code used in the build?
+        id: includessource4
+      - text: Is the source code origin in the provenance authenticated (i.e. fetched) by the builder?
+        id: authentic4
+    level: 4
+
+  provenanceIdentifiesEntryPoint:
+    title: "Provenance: Identifies entry point"
+    description: |
+      The provenance identifies the “entry point” of the build definition (see
+      build-as-code) used to drive the build including what source repo the
+      configuration was read from.
+
+      Examples:
+
+        - source repo: git URL + branch/tag/ref + commit ID
+        - entrypoint: path to config file(s) (e.g. ./.zuul.yaml) + job name within
+          config (e.g. envoy-build-arm64)
+    questions:
+      - text: Does the provenance identify the build-as-code entrypoint (including source repo)
+    level: 3
+
+  provenanceIncludesAllBuildParameters:
+    title: "Provenance: Includes all build parameters"
+    description: |
+      The provenance includes all build parameters under a user’s control. See
+      Parameterless for details. (At L3, the parameters must be listed; at L4,
+      they must be empty.)
+    questions:
+      - text: Does the provenance include all user-controlled build parameters?
+    level: 3
+
+  provenanceIncludesAllTransitiveDependencies:
+    title: "Provenance: Includes all transitive dependencies"
+    description: |
+      The provenance includes all transitive dependencies listed in Dependencies
+      Complete.
+    questions:
+      - text: Does the provenance include all transitive dependencies?
+    level: 4
+
+  provenanceIncludesReproducibleInfo:
+    title: "Provenance: Includes reproducible info"
+    description: |
+      The provenance includes a boolean indicating whether build is intended to be
+      reproducible and, if so, all information necessary to reproduce the build. See
+      Reproducible for more details.
+    questions:
+      - text: Does the provenance include a reproducible flag?
+        id: flag
+      - text: If the build is intended to be reproducible, does the provenance include
+          all information necessary to reproduce it?
+        id: info
+    level: 4
+
+  provenenceIncludesMetadata:
+    title: "Provenance: Includes metadata"
+    description: |
+      The provenance includes metadata to aid debugging and investigations. This
+      SHOULD at least include start and end timestamps and a unique identifier to
+      allow finding detailed debug logs.
+    questions:
+      - text: Does the provenance include metadata such as timestamps and a unique ID?
+              (As this is recommended but not required to achieve any SLSA level, 
+              don't answer "No" to this question - use "N/A" instead.)
+        na: true
+    level: 1
+
+  ############
+  ## COMMON ##
+  ############
+  
+  # Common requirements for every trusted system involved in the supply chain (source, build, distribution, etc.)
+  
+  commonSecurity:
+    title: "Common: Security"
+    description: |
+      The system meets some TBD baseline security standard to prevent compromise.
+      (Patching, vulnerability scanning, user isolation, transport security,
+      secure boot, machine identity, etc. Perhaps NIST 800-53 or a subset
+      thereof.)
+    questions:
+      - text: Does the system meet the baseline security standard?
+    level: 4
+
+  commonAccess:
+    title: "Common: Access"
+    description: |
+      All physical and remote access must be rare, logged, and gated behind
+      multi-party approval.
+    questions: 
+      - text: Are all physical and remote access rare, logged, and gated behind
+              multi-party approval?
+    level: 4
+
+  commonSuperusers:
+    title: "Common: Superusers"
+    description: |
+      Only a small number of platform admins may override the guarantees listed
+      here. Doing so MUST require approval of a second platform admin.
+    questions:
+      - text: Can only a small number of platform admins override the guarantees described in this practice?
+        id: override
+      - text: Does override require approval of a second platform admin?
+        id: approval
+    level: 4
+
+  
+
+tasks:
+  - sourceVersionControlled
+  - sourceVerifiedHistory
+  - sourceRetained18M
+  - sourceRetainedIndefinitely
+  - sourceTwoPersonReviewed
+
+  - buildScripted
+  - buildService
+  - buildCode
+  - buildEphemeral
+  - buildIsolated
+  - buildParameterless
+  - buildHermetic
+  - buildReproducible
+
+  - provenanceAvailable
+  - provenanceAuthenticated
+  - provenanceServiceGenerated
+  - provenanceNonFalsifiable
+  - provenanceDependenciesComplete
+  - provenanceIdentifiesArtifact
+  - provenanceIdentifiesBuilder
+  - provenanceIdentifiesBuildInstructions
+  - provenanceIdentifiesSourceCode2
+  - provenanceIdentifiesSourceCode3
+  - provenanceIdentifiesSourceCode4
+  - provenanceIdentifiesEntryPoint
+  - provenanceIncludesAllBuildParameters
+  - provenanceIncludesAllTransitiveDependencies
+  - provenanceIncludesReproducibleInfo
+  - provenenceIncludesMetadata
+
+  - commonSecurity
+  - commonAccess
+  - commonSuperusers
