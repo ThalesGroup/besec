@@ -651,7 +651,7 @@ taskDefinitions:
       multi-party approval.
     questions: 
       - text: Are all physical and remote access rare, logged, and gated behind
-      multi-party approval?
+              multi-party approval?
     level: 4
 
   commonSuperusers:
