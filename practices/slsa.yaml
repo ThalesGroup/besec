@@ -140,7 +140,7 @@ taskDefinitions:
            until at least 2022-07-01.
     questions:
       - text: Is source retained for at least 18 months?
-        id: retained
+        id: retained18m
       - text: Can only platform admins delete source, and they require two-party approval and follow a well-defined process?
         id: deletion
     level: 3
