@@ -337,10 +337,8 @@ taskDefinitions:
       reproducibility. A consumer MAY reject the build if it does not reproduce.
     questions: 
       - text: Is the build reproducible?
-              (As this is recommended but not required to achieve any SLSA level, it
-              is not possible to answer "No" to this question - use "N/A" instead.)
-        answers:
-          - ["Yes"]
+              (As this is recommended but not required to achieve any SLSA level, 
+              don't answer "No" to this question - use "N/A" instead.)
         na: true
     level: 4
 
@@ -620,10 +618,8 @@ taskDefinitions:
       allow finding detailed debug logs.
     questions:
       - text: Does the provenance include metadata such as timestamps and a unique ID?
-              (As this is recommended but not required to achieve any SLSA level, it
-              is not possible to answer "No" to this question - use "N/A" instead.)
-        answers:
-          - ["Yes"]
+              (As this is recommended but not required to achieve any SLSA level, 
+              don't answer "No" to this question - use "N/A" instead.)
         na: true
     level: 1
 
