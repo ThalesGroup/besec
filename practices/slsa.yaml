@@ -204,6 +204,127 @@ taskDefinitions:
   ###########
   ## BUILD ##
   ###########
+  
+  # Requirements on build process:
+  
+  buildScripted:
+    title: "Build: Scripted build"
+    description: |
+      All build steps were fully defined in some sort of “build script”. The only
+      manual command, if any, was to invoke the build script. 
+      
+      Examples:  
+        Build script is Makefile, invoked via make all. 
+        Build script is .github/workflows/build.yaml, invoked by GitHub Actions.
+      
+    questions:
+      - text: Are all build steps fully defined in a build script?
+    level: 1
+
+  buildService:
+    title: "Build: Build service"
+    description: |
+      All build steps ran using some build service, not on a developer’s
+      workstation. 
+      
+      Examples: 
+        GitHub Actions, Google Cloud Build, Travis CI.
+        
+    questions: 
+      - text: Do all build steps run in a build service?
+    level: 2
+
+  buildCode:
+  - title: "Build: Build as code"
+    description: |
+      The build definition and configuration executed by the build service is
+      verifiably derived from text file definitions stored in a version control
+      system. Verifiably derived can mean either fetched directly through a
+      trusted channel, or that the derived definition has some trustworthy
+      provenance chain linking back to version control. 
+      
+      Examples: 
+        .github/workflows/build.yaml stored in git Tekton bundles generated from
+      text files by a SLSA compliant build process and stored in an OCI registry
+      with SLSA provenance metadata available.
+      
+    questions: 
+      - text: Is the build script stored in a version control system?
+    level: 3
+
+  buildEphemeral:
+  - title: "Build: Ephemeral environment"
+    description: |
+      The build service ensured that the build steps ran in an ephemeral
+      environment, such as a container or VM, provisioned solely for this build,
+      and not reused from a prior build.
+    questions: 
+      - text: Are build steps run in an ephemeral environment?
+    level: 3
+
+  buildIsolated:
+  - title: "Build: Isolated"
+    description: |
+      The build service ensured that the build steps ran in an isolated
+      environment free of influence from other build instances, whether prior or
+      concurrent.  It MUST NOT be possible for a build to access any secrets of
+      the build service, such as the provenance signing key. It MUST NOT be
+      possible for two builds that overlap in time to influence one another. It
+      MUST NOT be possible for one build to persist or influence the build
+      environment of a subsequent build. Build caches, if used, MUST be purely
+      content-addressable to prevent tampering.
+    questions:
+      - text: Is the build run in an isolated environment?
+    level: 3
+
+  buildParameterless:
+  - title: "Build: Parameterless"
+    description: |
+      The build output cannot be affected by user parameters other than the build
+      entry point and the top-level source location. In other words, the build is
+      fully defined through the build script and nothing else. Examples:  GitHub
+      Actions workflow_dispatch inputs MUST be empty. Google Cloud Build
+      user-defined substitutions MUST be empty. (Default substitutions, whose
+      values are defined by the server, are acceptable.)
+    questions:
+      - text: Is the build fully defined through the build script that does not have any parameters?
+    level: 4
+
+  buildHermetic:  
+  - title: "Build: Hermetic"
+    description: |
+      All transitive build steps, sources, and dependencies were fully declared up
+      front with immutable references, and the build steps ran with no network
+      access. The user-defined build script:  MUST declare all dependencies,
+      including sources and other build steps, using immutable references in a
+      format that the build service understands.  The build service:  MUST fetch
+      all artifacts in a trusted control plane. MUST NOT allow mutable references.
+      MUST verify the integrity of each artifact.  If the immutable reference
+      includes a cryptographic hash, the service MUST verify the hash and reject
+      the fetch if the verification fails. Otherwise, the service MUST fetch the
+      artifact over a channel that ensures transport integrity, such as TLS or
+      code signing.   MUST prevent network access while running the build steps. 
+      This requirement is “best effort.” It SHOULD deter a reasonable team from
+      having a non-hermetic build, but it need not stop a determined adversary.
+      For example, using a container to prevent network access is sufficient.
+    questions:
+      - text: Does the build satisfy the hermetic requirements described above?
+    level: 4
+
+  buildReproducible:
+  - title: "Build: Reproducible"
+    description: |
+      Re-running the build steps with identical input artifacts results in
+      bit-for-bit identical output. Builds that cannot meet this MUST provide a
+      justification why the build cannot be made reproducible. This
+      requirement is “best effort”. The user-provided build script SHOULD declare
+      whether the build is intended to be reproducible or a justification why not.
+      The build service MAY blindly propagate this intent without verifying
+      reproducibility. A consumer MAY reject the build if it does not reproduce.
+    questions: 
+      - text: Is the build reproducible?
+    level: 4
+
 
   ################
   ## PROVENANCE ##
@@ -490,6 +611,43 @@ taskDefinitions:
   ############
   ## COMMON ##
   ############
+  
+  # Common requirements for every trusted system involved in the supply chain (source, build, distribution, etc.)
+  
+  commonSecurity:
+    title: "Common: Security"
+    description: |
+      The system meets some TBD baseline security standard to prevent compromise.
+      (Patching, vulnerability scanning, user isolation, transport security,
+      secure boot, machine identity, etc. Perhaps NIST 800-53 or a subset
+      thereof.)
+    questions:
+      - text: Does the system meet the baseline security standard?
+    level: 4
+
+  commonAccess:
+    title: "Common: Access"
+    description: |
+      All physical and remote access must be rare, logged, and gated behind
+      multi-party approval.
+    questions: 
+      - text: Are all physical and remote access rare, logged, and gated behind
+      multi-party approval?
+    level: 4
+
+  commonSuperusers:
+    title: "Common: Superusers"
+    description: |
+      Only a small number of platform admins may override the guarantees listed
+      here. Doing so MUST require approval of a second platform admin.
+    questions:
+      - text: Can only a small number of platform admins override the guarantees described in this practice?
+        id: override
+      - text: Does override require approval of a second platform admin?
+        id: approval
+    level: 4
+
+  
 
 tasks:
   - sourceVersionControlled
