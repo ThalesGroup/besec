@@ -142,7 +142,7 @@ taskDefinitions:
       - text: Is source retained for at least 18 months?
         id: retained18m
       - text: Can only platform admins delete source, and they require two-party approval and follow a well-defined process?
-        id: deletion
+        id: deletion18m
     level: 3
 
   # the requirement with the level 3 exception removed
@@ -532,9 +532,9 @@ taskDefinitions:
       builder either needs to have fetched the source itself or observed the fetch).
     questions:
       - text: Does the provenance include the origin of the source code?
-        id: includessource
+        id: includessource3
       - text: Is the source code origin in the provenance authenticated (i.e. fetched) by the builder?
-        id: authentic
+        id: authentic3
     level: 3
 
   provenanceIdentifiesSourceCode4:
@@ -556,9 +556,9 @@ taskDefinitions:
       repositories used in the build are listed).
     questions:
       - text: Does the provenance identify the origin of all the source code used in the build?
-        id: includessource
+        id: includessource4
       - text: Is the source code origin in the provenance authenticated (i.e. fetched) by the builder?
-        id: authentic
+        id: authentic4
     level: 4
 
   provenanceIdentifiesEntryPoint:
