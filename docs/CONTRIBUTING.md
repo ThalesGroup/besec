@@ -17,7 +17,6 @@ Repo structure:
 -   `api/`: web server implementation package
 -   `cmd/`: command-line tool to run and manage the site
 -   `demo/`: sample plans and practice definitions, for demos and tests
--   `deploy/`: configurations for GCP
 -   `lib/`: planning library
 -   `practices/`: the practices that form the input to planning
 -   `store/`: database interfaces
