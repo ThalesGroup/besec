@@ -80,10 +80,12 @@ BeSec is distributed as a
 [containerized](https://gcr.io/besec-project/besec) version of the binary. The
 tool functions as both application server and admin client CLI.
 
-See the `deploy` directory for a Terraform configuration to deploy the app to
-Google Cloud Platform. BeSec depends on GCP's Cloud Firestore and Firebase
-Auth; if you would like to support alternative databases or authentication
-systems, PRs are welcome.
+BeSec depends on GCP's Cloud Firestore and Firebase Auth; if you would like to
+support alternative databases or authentication systems, PRs are welcome.
+
+It can be deployed using Cloud Run - the only prerequisites are a Firestore
+database (in Native mode) existing in the project and the Service Account
+associated with the instance having access to that database.
 
 See the [CONTRIBUTING.md](./docs/CONTRIBUTING.md) file for instructions on running
 the server locally.
