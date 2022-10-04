@@ -26,6 +26,7 @@ Repo structure:
 
 Prequisites:
 
+-   Go 1.17+
 -   dotnet 2.1 (required if changing the APIs).
 -   goswagger (tested with v0.29)
 -   firebase cli (for local development)
