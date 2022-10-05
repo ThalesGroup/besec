@@ -6,7 +6,7 @@ LABEL description="Contains all of the utilities required to build and test the 
 ENV NODEV="16.14.0" \
     GOSWAGGERV="0.29.0" \
     GOLANGCILINTV="1.44.2" \
-    GCPSDKV="373.0.0" \
+    GCPSDKV="405.0.0" \
     DOTNETV="2.1"
 
 # apt repo for dotnet
