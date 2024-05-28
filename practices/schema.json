@@ -125,14 +125,6 @@
                     "description": "A reference to be able to refer to the question.\nCan be omitted if there is only one question in a task, in which case the question ID defaults to the task ID.\nMust be unique within a practice.",
                     "pattern": "^[a-z]+[a-zA-Z0-9]*$"
                 },
-                "answers": {
-                    "type": "array",
-                    "description": "A set of allowed answers.",
-                    "items": {
-                        "$comment": "any primitive"
-                    },
-                    "default": ["Yes", "No"]
-                },
                 "na": {
                     "type": "boolean",
                     "description": "Whether to allow N/A as an answer.",

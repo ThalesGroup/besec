@@ -17,7 +17,6 @@ Repo structure:
 -   `api/`: web server implementation package
 -   `cmd/`: command-line tool to run and manage the site
 -   `demo/`: sample plans and practice definitions, for demos and tests
--   `deploy/`: configurations for GCP
 -   `lib/`: planning library
 -   `practices/`: the practices that form the input to planning
 -   `store/`: database interfaces
@@ -27,6 +26,7 @@ Repo structure:
 
 Prequisites:
 
+-   Go 1.17+
 -   dotnet 2.1 (required if changing the APIs).
 -   goswagger (tested with v0.29)
 -   firebase cli (for local development)
