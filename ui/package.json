@@ -40,10 +40,7 @@
   },
   "overrides": {
     "@grpc/proto-loader": "0.7.13",
-    "ws":"8.17.1",
-    "ip":"2.0.1",
-    "ipaddr.js":"2.2.0",
-    "postcss":"8.4.31"
+    "ws":"8.17.1"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
