@@ -19,7 +19,7 @@
     "@types/react-router-hash-link": "1.2.1",
     "clsx": "1.1.1",
     "deep-diff": "1.0.2",
-    "firebase": "9.6.7",
+    "firebase": "10.9.0",
     "js-yaml": "4.1.0",
     "lodash-es": "4.17.21",
     "moment": "2.29.4",
