@@ -1,6 +1,6 @@
 module github.com/ThalesGroup/besec
 
-go 1.18
+go 1.23.0
 
 require (
 	cloud.google.com/go/firestore v1.9.0
@@ -21,8 +21,8 @@ require (
 	github.com/spf13/afero v1.8.1
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/viper v1.10.1
-	golang.org/x/net v0.33.0
-	golang.org/x/oauth2 v0.7.0
+	golang.org/x/net v0.38.0
+	golang.org/x/oauth2 v0.27.0
 	google.golang.org/api v0.114.0
 	google.golang.org/grpc v1.56.3
 	gopkg.in/yaml.v2 v2.4.0
@@ -30,8 +30,7 @@ require (
 
 require (
 	cloud.google.com/go v0.110.0 // indirect
-	cloud.google.com/go/compute v1.19.1 // indirect
-	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	cloud.google.com/go/iam v0.13.0 // indirect
 	cloud.google.com/go/longrunning v0.4.1 // indirect
 	cloud.google.com/go/storage v1.28.1 // indirect
@@ -65,9 +64,9 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	go.mongodb.org/mongo-driver v1.8.3 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/sync v0.12.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/time v0.1.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
